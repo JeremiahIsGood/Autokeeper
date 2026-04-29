@@ -1,4 +1,4 @@
-const CACHE_NAME = "jicheqi-v7";
+const CACHE_NAME = "jicheqi-v9";
 const APP_FILES = [
   "./",
   "./index.html",

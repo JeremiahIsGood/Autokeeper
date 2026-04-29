@@ -56,6 +56,7 @@ button {
 
 h1,
 h2,
+h3,
 p {
   margin: 0;
 }
@@ -530,26 +531,47 @@ h2 {
   font-weight: 700;
 }
 
-.region-columns {
+.region-path {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
   gap: 8px;
-  min-height: 340px;
-  overflow: hidden;
+  margin-bottom: 10px;
 }
 
-.region-column {
-  display: flex;
-  min-height: 0;
-  flex-direction: column;
-  gap: 6px;
+.region-path button {
+  min-height: 38px;
+  padding: 0 12px;
+  border-radius: 8px;
+  background: #eef2ef;
+  color: var(--text);
+  font-weight: 900;
+}
+
+.region-path button:disabled {
+  color: #a6b0ad;
+}
+
+.region-path span {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 900;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.region-list {
+  display: grid;
+  gap: 8px;
+  max-height: 52vh;
   overflow: auto;
 }
 
 .region-option,
 .search-result {
-  min-height: 42px;
-  padding: 8px 10px;
+  min-height: 48px;
+  padding: 10px 12px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #fbfcfa;
@@ -658,13 +680,4 @@ h2 {
     font-size: 14px;
   }
 
-  .region-columns {
-    grid-template-columns: 1fr;
-    max-height: 58vh;
-    overflow: auto;
-  }
-
-  .region-column {
-    overflow: visible;
-  }
 }

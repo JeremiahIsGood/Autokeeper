@@ -101,11 +101,11 @@
           <button class="small-close" id="regionCloseButton" type="button" aria-label="关闭">×</button>
         </div>
         <input class="search-input" id="regionSearchInput" type="search" placeholder="搜索城市、区县">
-        <div class="region-columns">
-          <div class="region-column" id="provinceList" aria-label="省级地区"></div>
-          <div class="region-column" id="cityList" aria-label="城市"></div>
-          <div class="region-column" id="districtList" aria-label="区县"></div>
+        <div class="region-path">
+          <button id="regionBackButton" type="button">返回</button>
+          <span id="regionPathText">请选择省级地区</span>
         </div>
+        <div class="region-list" id="regionList" aria-label="地区列表"></div>
         <div class="search-results" id="regionSearchResults" hidden></div>
       </section>
     </div>
