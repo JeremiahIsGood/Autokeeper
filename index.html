@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#0f766e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="计车器">
+    <title>计车器</title>
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <h1>计车器</h1>
+          <p id="statusText">选择地区后点击品牌记录</p>
+        </div>
+        <button class="icon-button" id="undoButton" type="button" aria-label="撤销上一次记录" title="撤销上一次记录">
+          ↶
+        </button>
+      </header>
+
+      <main>
+        <section class="region-strip" aria-label="地区选择">
+          <button class="region-picker-button" id="regionPickerButton" type="button">
+            <span>当前地区</span>
+            <strong id="regionPickerText">广东省 · 广州市 · 天河区</strong>
+          </button>
+          <button class="all-region-button" id="allRegionButton" type="button">全部地区</button>
+        </section>
+
+        <section class="today-bar" aria-live="polite">
+          <span>当前地区</span>
+          <strong id="currentRegion">广州</strong>
+          <span>今日记录</span>
+          <strong id="todayCount">0</strong>
+        </section>
+
+        <section class="brand-search" aria-label="品牌搜索">
+          <input id="brandSearchInput" type="search" placeholder="搜索品牌并定位">
+          <button id="brandSearchButton" type="button">定位</button>
+        </section>
+
+        <section class="sort-bar" id="sortBar" hidden>
+          <span id="sortBarText">正在调整排序</span>
+          <button id="sortDoneButton" type="button">完成</button>
+        </section>
+
+        <section class="brand-groups" id="brandGrid" aria-label="汽车品牌记录按钮"></section>
+
+        <section class="tabs" aria-label="统计范围">
+          <button class="tab is-active" type="button" data-range="today">今日</button>
+          <button class="tab" type="button" data-range="week">本周</button>
+          <button class="tab" type="button" data-range="month">本月</button>
+          <button class="tab" type="button" data-range="year">本年</button>
+          <button class="tab" type="button" data-range="all">全部</button>
+        </section>
+
+        <section class="rank-panel" aria-label="排行榜">
+          <div class="section-head">
+            <h2 id="rankTitle">今日排行榜</h2>
+            <div class="backup-actions">
+              <button class="text-button" id="importButton" type="button">导入</button>
+              <button class="text-button" id="exportButton" type="button">导出</button>
+              <input id="importInput" type="file" accept="application/json,.json" hidden>
+            </div>
+          </div>
+          <ol class="rank-list" id="rankList"></ol>
+        </section>
+      </main>
+    </div>
+
+    <div class="modal-backdrop" id="brandMenu" hidden>
+      <section class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="menuTitle">
+        <h2 id="menuTitle">品牌</h2>
+        <button class="menu-action" id="menuViewButton" type="button">查看记录</button>
+        <button class="menu-action" id="menuSortButton" type="button">调整本组排序</button>
+        <button class="menu-action danger" id="menuMinusButton" type="button">减一</button>
+        <button class="menu-action muted" id="menuCloseButton" type="button">取消</button>
+      </section>
+    </div>
+
+    <div class="modal-backdrop" id="recordDialog" hidden>
+      <section class="modal-sheet large" role="dialog" aria-modal="true" aria-labelledby="recordTitle">
+        <div class="modal-head">
+          <h2 id="recordTitle">记录</h2>
+          <button class="small-close" id="recordCloseButton" type="button" aria-label="关闭">×</button>
+        </div>
+        <ol class="record-list" id="recordList"></ol>
+      </section>
+    </div>
+
+    <div class="modal-backdrop" id="regionDialog" hidden>
+      <section class="modal-sheet large" role="dialog" aria-modal="true" aria-labelledby="regionTitle">
+        <div class="modal-head">
+          <h2 id="regionTitle">选择地区</h2>
+          <button class="small-close" id="regionCloseButton" type="button" aria-label="关闭">×</button>
+        </div>
+        <input class="search-input" id="regionSearchInput" type="search" placeholder="搜索城市、区县">
+        <div class="region-columns">
+          <div class="region-column" id="provinceList" aria-label="省级地区"></div>
+          <div class="region-column" id="cityList" aria-label="城市"></div>
+          <div class="region-column" id="districtList" aria-label="区县"></div>
+        </div>
+        <div class="search-results" id="regionSearchResults" hidden></div>
+      </section>
+    </div>
+
+    <script src="regions.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
