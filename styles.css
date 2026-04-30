@@ -629,6 +629,12 @@ h2 {
   margin-bottom: 10px;
 }
 
+.region-path[hidden],
+.region-list[hidden],
+.search-results[hidden] {
+  display: none;
+}
+
 .region-path button {
   min-height: 38px;
   padding: 0 12px;
@@ -679,7 +685,7 @@ h2 {
 .search-results {
   display: grid;
   gap: 8px;
-  max-height: 420px;
+  max-height: 52vh;
   overflow: auto;
 }
 

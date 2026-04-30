@@ -197,6 +197,20 @@ const BRAND_GROUPS = [
 ];
 
 const BRANDS = [...new Set(BRAND_GROUPS.flatMap((group) => group.brands))];
+const REGION_OPTIONS = window.REGION_OPTIONS || window.REGION_TREE.flatMap((province) =>
+  province.cities.flatMap((city) =>
+    city.districts.map((district) => {
+      const name = `${province.province} ${city.city} ${district}`;
+      return {
+        province: province.province,
+        city: city.city,
+        district,
+        name,
+        shortName: `${city.city} ${district}`,
+      };
+    })
+  )
+);
 const BRAND_LOGOS = {
   "DS": "logos/logo-001.png",
   "iCar": "logos/logo-002.png",
@@ -374,6 +388,13 @@ let activeBrand = null;
 let activeBrandGroup = null;
 let longPressTimer = null;
 let longPressTriggered = false;
+let longPressPointerId = null;
+let longPressStartX = 0;
+let longPressStartY = 0;
+let isMultiTouchGesture = false;
+const activeTouchPointers = new Set();
+const LONG_PRESS_MS = 560;
+const LONG_PRESS_MOVE_LIMIT = 12;
 let dragState = null;
 let sortingGroup = null;
 let regionStep = "province";
@@ -422,6 +443,7 @@ const regionCloseButton = document.querySelector("#regionCloseButton");
 const regionSearchInput = document.querySelector("#regionSearchInput");
 const regionBackButton = document.querySelector("#regionBackButton");
 const regionPathText = document.querySelector("#regionPathText");
+const regionPath = document.querySelector(".region-path");
 const regionList = document.querySelector("#regionList");
 const regionSearchResults = document.querySelector("#regionSearchResults");
 let regionDialogMode = "record";
@@ -696,32 +718,69 @@ function createBrandButton(brand, groupName, canDrag) {
   `;
 
   button.addEventListener("pointerdown", (event) => {
+    if (event.pointerType === "touch") {
+      activeTouchPointers.add(event.pointerId);
+      if (activeTouchPointers.size > 1) {
+        isMultiTouchGesture = true;
+        clearLongPressTimer();
+        longPressPointerId = null;
+        return;
+      }
+    }
+
     longPressTriggered = false;
+    longPressPointerId = event.pointerId;
+    longPressStartX = event.clientX;
+    longPressStartY = event.clientY;
     button.setPointerCapture?.(event.pointerId);
 
     longPressTimer = window.setTimeout(() => {
       longPressTriggered = true;
       openBrandMenu(brand, groupName, canDrag);
-    }, 520);
+    }, LONG_PRESS_MS);
   });
 
   button.addEventListener("pointermove", (event) => {
+    if (event.pointerId === longPressPointerId) {
+      const moveX = Math.abs(event.clientX - longPressStartX);
+      const moveY = Math.abs(event.clientY - longPressStartY);
+      if (moveX > LONG_PRESS_MOVE_LIMIT || moveY > LONG_PRESS_MOVE_LIMIT) {
+        clearLongPressTimer();
+      }
+    }
     updateFloatingDrag(event);
   });
 
-  button.addEventListener("pointerup", () => {
+  button.addEventListener("pointerup", (event) => {
+    const wasMultiTouch = isMultiTouchGesture;
+    if (event.pointerType === "touch") {
+      activeTouchPointers.delete(event.pointerId);
+      if (activeTouchPointers.size === 0) {
+        isMultiTouchGesture = false;
+      }
+    }
+
     clearLongPressTimer();
     const wasLongPress = longPressTriggered;
+    const wasPrimaryPointer = event.pointerId === longPressPointerId;
     dragState = null;
     longPressTriggered = false;
-    if (wasLongPress) {
+    longPressPointerId = null;
+    if (wasMultiTouch || wasLongPress || !wasPrimaryPointer) {
       return;
     }
     addRecord(brand, button);
   });
 
-  button.addEventListener("pointercancel", () => {
+  button.addEventListener("pointercancel", (event) => {
+    if (event.pointerType === "touch") {
+      activeTouchPointers.delete(event.pointerId);
+      if (activeTouchPointers.size === 0) {
+        isMultiTouchGesture = false;
+      }
+    }
     clearLongPressTimer();
+    longPressPointerId = null;
     dragState = null;
   });
   button.addEventListener("contextmenu", (event) => event.preventDefault());
@@ -1140,12 +1199,18 @@ function createRegionOption(label, isActive) {
 
 function renderRegionSearch() {
   const keyword = regionSearchInput.value.trim();
+  const isSearchMode = keyword.length > 0;
   regionSearchResults.innerHTML = "";
-  regionSearchResults.hidden = keyword.length === 0;
-  regionList.hidden = keyword.length > 0;
-  regionBackButton.disabled = keyword.length > 0 || regionStep === "province";
+  regionDialog.classList.toggle("is-searching", isSearchMode);
+  regionSearchResults.hidden = !isSearchMode;
+  regionList.hidden = isSearchMode;
+  regionPath.hidden = isSearchMode;
+  regionBackButton.disabled = isSearchMode || regionStep === "province";
 
-  if (!keyword) return;
+  if (!keyword) {
+    renderRegionList();
+    return;
+  }
 
   const matches = REGION_OPTIONS.filter((region) => {
     return region.name.includes(keyword) || region.shortName.includes(keyword) || region.district.includes(keyword);
