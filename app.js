@@ -1,7 +1,7 @@
 const BRAND_GROUPS = [
   {
-    name: "中国",
-    brands: [
+    "name": "中国",
+    "brands": [
       "比亚迪",
       "埃安",
       "传祺",
@@ -56,8 +56,6 @@ const BRAND_GROUPS = [
       "坦克",
       "极越",
       "江淮",
-      "捷达",
-      "驭胜",
       "萤火虫",
       "海马",
       "大通",
@@ -75,55 +73,283 @@ const BRAND_GROUPS = [
       "猛士",
       "君马",
       "力帆",
-    ],
+      "东南",
+      "东风纳米",
+      "中华",
+      "乐道",
+      "仰望",
+      "全球鹰",
+      "凌宝",
+      "国金",
+      "奇瑞风云",
+      "尚界",
+      "思铭",
+      "斯威",
+      "智己",
+      "爱驰",
+      "理念",
+      "蓝电",
+      "观致",
+      "长安欧尚",
+      "高合",
+      "江铃",
+      "宝沃"
+    ]
   },
   {
-    name: "日本",
-    brands: ["丰田", "本田", "日产", "马自达", "雷克萨斯", "三菱", "斯巴鲁", "讴歌", "铃木", "英菲尼迪"],
+    "name": "日本",
+    "brands": [
+      "丰田",
+      "本田",
+      "日产",
+      "马自达",
+      "雷克萨斯",
+      "三菱",
+      "斯巴鲁",
+      "讴歌",
+      "铃木",
+      "英菲尼迪",
+      "世极"
+    ]
   },
   {
-    name: "美国",
-    brands: ["特斯拉", "福特", "雪佛兰", "别克", "凯迪拉克", "林肯", "吉普", "道奇", "克莱斯勒"],
+    "name": "美国",
+    "brands": [
+      "特斯拉",
+      "福特",
+      "雪佛兰",
+      "别克",
+      "凯迪拉克",
+      "林肯",
+      "吉普",
+      "道奇",
+      "克莱斯勒"
+    ]
   },
   {
-    name: "德国",
-    brands: ["大众", "奔驰", "宝马", "奥迪", "保时捷", "斯玛特"],
+    "name": "德国",
+    "brands": [
+      "大众",
+      "奔驰",
+      "宝马",
+      "奥迪",
+      "保时捷",
+      "斯玛特",
+      "迈巴赫",
+      "欧宝",
+      "捷达"
+    ]
   },
   {
-    name: "英国",
-    brands: ["路虎", "捷豹", "迷你", "宾利", "劳斯莱斯", "莲花"],
+    "name": "英国",
+    "brands": [
+      "路虎",
+      "捷豹",
+      "迷你",
+      "宾利",
+      "劳斯莱斯",
+      "莲花",
+      "阿斯顿·马丁",
+      "LEVC",
+      "迈凯伦",
+      "英力士掷弹兵"
+    ]
   },
   {
-    name: "韩国",
-    brands: ["现代", "起亚"],
+    "name": "韩国",
+    "brands": [
+      "现代",
+      "起亚",
+      "捷尼赛斯"
+    ]
   },
   {
-    name: "法国",
-    brands: ["标致", "雪铁龙", "雷诺", "DS"],
+    "name": "法国",
+    "brands": [
+      "标致",
+      "雪铁龙",
+      "雷诺",
+      "DS",
+      "布加迪"
+    ]
   },
   {
-    name: "意大利",
-    brands: ["玛莎拉蒂", "菲亚特", "兰博基尼", "法拉利", "阿尔法·罗密欧"],
+    "name": "意大利",
+    "brands": [
+      "玛莎拉蒂",
+      "菲亚特",
+      "兰博基尼",
+      "法拉利",
+      "阿尔法·罗密欧"
+    ]
   },
   {
-    name: "其他",
-    brands: ["沃尔沃", "斯柯达", "纳智捷"],
-  },
+    "name": "其他",
+    "brands": [
+      "沃尔沃",
+      "斯柯达",
+      "纳智捷",
+      "科尼赛克",
+      "极星",
+      "萨博"
+    ]
+  }
 ];
 
 const BRANDS = [...new Set(BRAND_GROUPS.flatMap((group) => group.brands))];
-const REGION_TREE = window.REGION_TREE || [];
-const REGION_OPTIONS = REGION_TREE.flatMap((province) =>
-  province.cities.flatMap((city) =>
-    city.districts.map((district) => ({
-      province: province.province,
-      city: city.city,
-      district,
-      name: `${province.province} ${city.city} ${district}`,
-      shortName: `${city.city} ${district}`,
-    }))
-  )
-);
+const BRAND_LOGOS = {
+  "DS": "logos/logo-001.png",
+  "iCar": "logos/logo-002.png",
+  "LEVC": "logos/logo-003.png",
+  "一汽": "logos/logo-004.png",
+  "三菱": "logos/logo-005.png",
+  "世极": "logos/logo-006.png",
+  "东南": "logos/logo-007.png",
+  "东风": "logos/logo-008.png",
+  "东风奕派": "logos/logo-009.png",
+  "东风纳米": "logos/logo-010.png",
+  "东风风光": "logos/logo-011.png",
+  "东风风神": "logos/logo-012.png",
+  "东风风行": "logos/logo-013.png",
+  "中华": "logos/logo-014.png",
+  "丰田": "logos/logo-015.png",
+  "乐道": "logos/logo-016.png",
+  "五菱": "logos/logo-017.png",
+  "享界": "logos/logo-018.png",
+  "仰望": "logos/logo-019.png",
+  "众泰": "logos/logo-020.png",
+  "传祺": "logos/logo-021.png",
+  "保时捷": "logos/logo-022.png",
+  "克莱斯勒": "logos/logo-023.png",
+  "全球鹰": "logos/logo-024.png",
+  "兰博基尼": "logos/logo-025.png",
+  "凌宝": "logos/logo-026.png",
+  "凯迪拉克": "logos/logo-027.png",
+  "别克": "logos/logo-028.png",
+  "力帆": "logos/logo-029.png",
+  "劳斯莱斯": "logos/logo-030.png",
+  "北京": "logos/logo-031.png",
+  "合创": "logos/logo-032.png",
+  "吉利": "logos/logo-033.png",
+  "吉利几何": "logos/logo-034.png",
+  "吉利银河": "logos/logo-035.png",
+  "吉普": "logos/logo-036.png",
+  "名爵": "logos/logo-037.png",
+  "君马": "logos/logo-038.png",
+  "启辰": "logos/logo-039.png",
+  "哈弗": "logos/logo-040.png",
+  "哪吒": "logos/logo-041.png",
+  "国金": "logos/logo-042.png",
+  "坦克": "logos/logo-043.png",
+  "埃安": "logos/logo-044.png",
+  "大众": "logos/logo-045.png",
+  "大通": "logos/logo-046.png",
+  "奇瑞": "logos/logo-047.png",
+  "奇瑞风云": "logos/logo-048.png",
+  "奔腾": "logos/logo-049.png",
+  "奔驰": "logos/logo-050.png",
+  "奥迪": "logos/logo-051.png",
+  "威马": "logos/logo-052.png",
+  "宝沃": "logos/logo-053.png",
+  "宝马": "logos/logo-054.png",
+  "宝骏": "logos/logo-055.png",
+  "宾利": "logos/logo-056.png",
+  "尊界": "logos/logo-057.png",
+  "小米": "logos/logo-058.png",
+  "小鹏": "logos/logo-059.png",
+  "尚界": "logos/logo-060.png",
+  "岚图": "logos/logo-061.png",
+  "布加迪": "logos/logo-062.png",
+  "幻速": "logos/logo-063.png",
+  "思皓": "logos/logo-064.png",
+  "思铭": "logos/logo-065.png",
+  "捷尼赛斯": "logos/logo-066.png",
+  "捷豹": "logos/logo-067.png",
+  "捷达": "logos/logo-068.png",
+  "捷途": "logos/logo-069.png",
+  "斯威": "logos/logo-070.png",
+  "斯巴鲁": "logos/logo-071.png",
+  "斯柯达": "logos/logo-072.png",
+  "斯玛特": "logos/logo-073.png",
+  "方程豹": "logos/logo-074.png",
+  "日产": "logos/logo-075.png",
+  "昊铂": "logos/logo-076.png",
+  "星途": "logos/logo-077.png",
+  "智己": "logos/logo-078.png",
+  "智界": "logos/logo-079.png",
+  "本田": "logos/logo-080.png",
+  "极星": "logos/logo-081.png",
+  "极氪": "logos/logo-082.png",
+  "极狐": "logos/logo-083.png",
+  "极石": "logos/logo-084.png",
+  "极越": "logos/logo-085.png",
+  "林肯": "logos/logo-086.png",
+  "枫叶": "logos/logo-087.png",
+  "标致": "logos/logo-088.png",
+  "欧宝": "logos/logo-089.png",
+  "欧拉": "logos/logo-090.png",
+  "比亚迪": "logos/logo-091.png",
+  "江淮": "logos/logo-092.png",
+  "江铃": "logos/logo-093.png",
+  "沃尔沃": "logos/logo-094.png",
+  "法拉利": "logos/logo-095.png",
+  "海马": "logos/logo-096.png",
+  "深蓝": "logos/logo-097.png",
+  "爱驰": "logos/logo-098.png",
+  "特斯拉": "logos/logo-099.png",
+  "猎豹": "logos/logo-100.png",
+  "猛士": "logos/logo-101.png",
+  "玛莎拉蒂": "logos/logo-102.png",
+  "现代": "logos/logo-103.png",
+  "理念": "logos/logo-104.png",
+  "理想": "logos/logo-105.png",
+  "睿蓝": "logos/logo-106.png",
+  "知豆": "logos/logo-107.png",
+  "福特": "logos/logo-108.png",
+  "科尼赛克": "logos/logo-109.png",
+  "红旗": "logos/logo-110.png",
+  "纳智捷": "logos/logo-111.png",
+  "腾势": "logos/logo-112.png",
+  "英力士掷弹兵": "logos/logo-113.png",
+  "英菲尼迪": "logos/logo-114.png",
+  "荣威": "logos/logo-115.png",
+  "莲花": "logos/logo-116.png",
+  "菲亚特": "logos/logo-117.png",
+  "萤火虫": "logos/logo-118.png",
+  "萨博": "logos/logo-119.png",
+  "蓝电": "logos/logo-120.png",
+  "蔚来": "logos/logo-121.png",
+  "观致": "logos/logo-122.png",
+  "讴歌": "logos/logo-123.png",
+  "赛力斯": "logos/logo-124.png",
+  "起亚": "logos/logo-125.png",
+  "路虎": "logos/logo-126.png",
+  "迈凯伦": "logos/logo-127.png",
+  "迈巴赫": "logos/logo-128.png",
+  "迷你": "logos/logo-129.png",
+  "道奇": "logos/logo-130.png",
+  "铃木": "logos/logo-131.png",
+  "长城": "logos/logo-132.png",
+  "长安": "logos/logo-133.png",
+  "长安启源": "logos/logo-134.png",
+  "长安欧尚": "logos/logo-135.png",
+  "问界": "logos/logo-136.png",
+  "阿尔法·罗密欧": "logos/logo-137.png",
+  "阿斯顿·马丁": "logos/logo-138.png",
+  "阿维塔": "logos/logo-139.png",
+  "陆风": "logos/logo-140.png",
+  "雪佛兰": "logos/logo-141.png",
+  "雪铁龙": "logos/logo-142.png",
+  "零跑": "logos/logo-143.png",
+  "雷克萨斯": "logos/logo-144.png",
+  "雷诺": "logos/logo-145.png",
+  "领克": "logos/logo-146.png",
+  "飞凡": "logos/logo-147.png",
+  "马自达": "logos/logo-148.png",
+  "高合": "logos/logo-149.png",
+  "魏牌": "logos/logo-150.png"
+};
+
 const STORAGE_KEY = "jicheqi.records.v1";
 const RANGE_LABELS = {
   today: "今日",
@@ -136,6 +362,11 @@ const RANGE_LABELS = {
 let selectedRegion = "广东省 广州市 天河区";
 let lastSpecificRegion = selectedRegion;
 let selectedRange = "today";
+let rankRegionBase = selectedRegion;
+let rankRegionScope = "district";
+let rankRange = "today";
+let selectedRankMonth = "";
+let selectedRankYear = "";
 let records = loadRecords();
 let collapsedGroups = loadCollapsedGroups();
 let brandOrders = loadBrandOrders();
@@ -150,6 +381,10 @@ let selectedProvince = null;
 let selectedCity = null;
 
 const brandGrid = document.querySelector("#brandGrid");
+const recordPage = document.querySelector("#recordPage");
+const rankPage = document.querySelector("#rankPage");
+const rankPageButton = document.querySelector("#rankPageButton");
+const backToRecordButton = document.querySelector("#backToRecordButton");
 const rankList = document.querySelector("#rankList");
 const rankTitle = document.querySelector("#rankTitle");
 const statusText = document.querySelector("#statusText");
@@ -161,12 +396,12 @@ const importButton = document.querySelector("#importButton");
 const importInput = document.querySelector("#importInput");
 const brandSearchInput = document.querySelector("#brandSearchInput");
 const brandSearchButton = document.querySelector("#brandSearchButton");
-const sortBar = document.querySelector("#sortBar");
-const sortBarText = document.querySelector("#sortBarText");
-const sortDoneButton = document.querySelector("#sortDoneButton");
 const regionPickerButton = document.querySelector("#regionPickerButton");
 const regionPickerText = document.querySelector("#regionPickerText");
-const allRegionButton = document.querySelector("#allRegionButton");
+const rankRegionButton = document.querySelector("#rankRegionButton");
+const rankRegionText = document.querySelector("#rankRegionText");
+const rankMonthSelect = document.querySelector("#rankMonthSelect");
+const rankYearSelect = document.querySelector("#rankYearSelect");
 const brandMenu = document.querySelector("#brandMenu");
 const menuTitle = document.querySelector("#menuTitle");
 const menuViewButton = document.querySelector("#menuViewButton");
@@ -177,6 +412,11 @@ const recordDialog = document.querySelector("#recordDialog");
 const recordTitle = document.querySelector("#recordTitle");
 const recordList = document.querySelector("#recordList");
 const recordCloseButton = document.querySelector("#recordCloseButton");
+const sortDialog = document.querySelector("#sortDialog");
+const sortTitle = document.querySelector("#sortTitle");
+const sortList = document.querySelector("#sortList");
+const sortCloseButton = document.querySelector("#sortCloseButton");
+const sortSaveButton = document.querySelector("#sortSaveButton");
 const regionDialog = document.querySelector("#regionDialog");
 const regionCloseButton = document.querySelector("#regionCloseButton");
 const regionSearchInput = document.querySelector("#regionSearchInput");
@@ -184,6 +424,7 @@ const regionBackButton = document.querySelector("#regionBackButton");
 const regionPathText = document.querySelector("#regionPathText");
 const regionList = document.querySelector("#regionList");
 const regionSearchResults = document.querySelector("#regionSearchResults");
+let regionDialogMode = "record";
 
 function loadRecords() {
   try {
@@ -281,8 +522,60 @@ function inSelectedRange(record) {
   return true;
 }
 
+function isInRange(record, range, periodValue = "") {
+  if (range === "all") return true;
+
+  const recordDate = new Date(record.time);
+  const now = new Date();
+
+  if (range === "today") {
+    return recordDate >= startOfDay(now);
+  }
+
+  if (range === "week") {
+    return recordDate >= startOfWeek(now);
+  }
+
+  if (range === "month") {
+    const monthKey = periodValue || getMonthKey(now);
+    return getMonthKey(recordDate) === monthKey;
+  }
+
+  if (range === "year") {
+    const yearKey = periodValue || String(now.getFullYear());
+    return String(recordDate.getFullYear()) === yearKey;
+  }
+
+  return true;
+}
+
 function inSelectedRegion(record) {
   return selectedRegion === "全部地区" || record.region === selectedRegion;
+}
+
+function getRegionParts(regionName) {
+  const [province = "", city = "", district = ""] = regionName.split(" ");
+  return { province, city, district };
+}
+
+function isInRankRegion(record) {
+  if (rankRegionScope === "all") return true;
+
+  const recordRegion = getRegionParts(record.region);
+  const baseRegion = getRegionParts(rankRegionBase);
+
+  if (rankRegionScope === "province") return recordRegion.province === baseRegion.province;
+  if (rankRegionScope === "city") return recordRegion.province === baseRegion.province && recordRegion.city === baseRegion.city;
+  return record.region === rankRegionBase;
+}
+
+function getMonthKey(date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+}
+
+function formatMonthKey(monthKey) {
+  const [year, month] = monthKey.split("-");
+  return `${year}年${Number(month)}月`;
 }
 
 function countRecords({ brand, region = selectedRegion, range = "today" } = {}) {
@@ -371,7 +664,7 @@ function buildRanking() {
   const totals = new Map(BRANDS.map((brand) => [brand, 0]));
 
   records
-    .filter((record) => inSelectedRegion(record) && inSelectedRange(record))
+    .filter((record) => isInRankRegion(record) && isInRange(record, rankRange, rankRange === "month" ? selectedRankMonth : selectedRankYear))
     .forEach((record) => {
       totals.set(record.brand, (totals.get(record.brand) || 0) + 1);
     });
@@ -390,12 +683,14 @@ function getGroupBrands(groupName, defaultBrands) {
 function createBrandButton(brand, groupName, canDrag) {
   const button = document.createElement("button");
   button.className = "brand-button";
-  button.classList.toggle("is-sortable", sortingGroup === groupName && canDrag);
   button.type = "button";
   button.dataset.brand = brand;
   button.dataset.group = groupName;
   button.dataset.canDrag = String(canDrag);
+  const logo = BRAND_LOGOS[brand];
+  button.classList.toggle("has-logo", Boolean(logo));
   button.innerHTML = `
+    ${logo ? `<span class="brand-logo-wrap"><img class="brand-logo" src="${logo}" alt="${brand}车标"></span>` : ""}
     <span class="brand-name">${brand}</span>
     <span class="brand-count">${countRecords({ brand, range: "today" })}</span>
   `;
@@ -403,11 +698,6 @@ function createBrandButton(brand, groupName, canDrag) {
   button.addEventListener("pointerdown", (event) => {
     longPressTriggered = false;
     button.setPointerCapture?.(event.pointerId);
-
-    if (sortingGroup === groupName && canDrag) {
-      startFloatingDrag(button, groupName, event);
-      return;
-    }
 
     longPressTimer = window.setTimeout(() => {
       longPressTriggered = true;
@@ -422,26 +712,17 @@ function createBrandButton(brand, groupName, canDrag) {
   button.addEventListener("pointerup", () => {
     clearLongPressTimer();
     const wasLongPress = longPressTriggered;
-    const wasDragging = Boolean(dragState?.active);
-
-    if (wasDragging) {
-      finishFloatingDrag();
-      return;
-    }
-
-    button.classList.remove("is-dragging");
     dragState = null;
     longPressTriggered = false;
     if (wasLongPress) {
       return;
     }
-    if (sortingGroup) return;
     addRecord(brand, button);
   });
 
   button.addEventListener("pointercancel", () => {
     clearLongPressTimer();
-    cancelFloatingDrag();
+    dragState = null;
   });
   button.addEventListener("contextmenu", (event) => event.preventDefault());
 
@@ -453,92 +734,23 @@ function clearLongPressTimer() {
   longPressTimer = null;
 }
 
-function startFloatingDrag(button, groupName, event) {
-  const rect = button.getBoundingClientRect();
-  const clone = button.cloneNode(true);
-  const placeholder = document.createElement("div");
-
-  placeholder.className = "brand-placeholder";
-  placeholder.style.width = `${rect.width}px`;
-  placeholder.style.height = `${rect.height}px`;
-
-  clone.classList.add("drag-clone");
-  clone.style.width = `${rect.width}px`;
-  clone.style.height = `${rect.height}px`;
-  clone.style.left = "0";
-  clone.style.top = "0";
-
-  button.parentElement.insertBefore(placeholder, button);
-  button.classList.add("drag-source");
-  document.body.append(clone);
-
-  dragState = {
-    active: true,
-    button,
-    clone,
-    placeholder,
-    groupName,
-    grid: button.parentElement,
-    offsetX: event.clientX - rect.left,
-    offsetY: event.clientY - rect.top,
-  };
-
-  document.body.classList.add("is-sorting-drag");
-  moveDragClone(event.clientX, event.clientY);
-}
-
 function updateFloatingDrag(event) {
   if (!dragState?.active) return;
 
   event.preventDefault();
-  moveDragClone(event.clientX, event.clientY);
 
-  const target = document.elementFromPoint(event.clientX, event.clientY)?.closest(".brand-button");
-  if (!target || target === dragState.button || target.classList.contains("drag-clone")) return;
-  if (target.dataset.group !== dragState.groupName || target.dataset.canDrag !== "true") return;
+  const target = document.elementFromPoint(event.clientX, event.clientY)?.closest(".sort-item");
+  if (!target || target === dragState.item) return;
 
   const targetRect = target.getBoundingClientRect();
   const targetCenter = targetRect.top + targetRect.height / 2;
   const placeAfter = event.clientY > targetCenter;
-  dragState.grid.insertBefore(dragState.placeholder, placeAfter ? target.nextSibling : target);
-}
-
-function moveDragClone(clientX, clientY) {
-  if (!dragState?.clone) return;
-  dragState.clone.style.transform = `translate3d(${clientX - dragState.offsetX}px, ${clientY - dragState.offsetY}px, 0)`;
-}
-
-function finishFloatingDrag() {
-  if (!dragState?.active) return;
-
-  const { button, clone, placeholder, grid, groupName } = dragState;
-  grid.insertBefore(button, placeholder);
-  button.classList.remove("drag-source", "is-dragging");
-  placeholder.remove();
-  clone.remove();
-  saveGroupOrder(groupName, grid);
-  document.body.classList.remove("is-sorting-drag");
-  dragState = null;
-  statusText.textContent = `${groupName}分组顺序已保存`;
-}
-
-function cancelFloatingDrag() {
-  if (!dragState?.active) {
-    dragState = null;
-    return;
-  }
-
-  const { button, clone, placeholder } = dragState;
-  button.classList.remove("drag-source", "is-dragging");
-  placeholder.remove();
-  clone.remove();
-  document.body.classList.remove("is-sorting-drag");
-  dragState = null;
+  sortList.insertBefore(dragState.item, placeAfter ? target.nextSibling : target);
 }
 
 function saveGroupOrder(groupName, grid) {
   if (!groupName || groupName === "常用" || !grid) return;
-  brandOrders[groupName] = [...grid.querySelectorAll(".brand-button")].map((button) => button.dataset.brand);
+  brandOrders[groupName] = [...grid.querySelectorAll("[data-brand]")].map((item) => item.dataset.brand);
   saveBrandOrders();
 }
 
@@ -638,9 +850,12 @@ function locateBrand() {
 }
 
 function renderRanking() {
+  populateRankPeriods();
   const ranking = buildRanking();
   const visible = ranking.filter((item) => item.count > 0);
-  rankTitle.textContent = `${RANGE_LABELS[selectedRange]}排行榜`;
+  rankTitle.textContent = `${getRankRangeLabel()}排行榜`;
+  rankRegionText.textContent = getRankRegionLabel();
+  updateRankButtons();
   rankList.innerHTML = "";
 
   if (visible.length === 0) {
@@ -663,8 +878,52 @@ function renderRanking() {
   });
 }
 
+function populateRankPeriods() {
+  const monthKeys = [...new Set(records.map((record) => getMonthKey(new Date(record.time))))].sort().reverse();
+  const yearKeys = [...new Set(records.map((record) => String(new Date(record.time).getFullYear())))].sort().reverse();
+  const currentMonth = getMonthKey(new Date());
+  const currentYear = String(new Date().getFullYear());
+  const months = monthKeys.length > 0 ? monthKeys : [currentMonth];
+  const years = yearKeys.length > 0 ? yearKeys : [currentYear];
+
+  if (!selectedRankMonth || !months.includes(selectedRankMonth)) selectedRankMonth = months[0];
+  if (!selectedRankYear || !years.includes(selectedRankYear)) selectedRankYear = years[0];
+
+  rankMonthSelect.innerHTML = months.map((month) => `<option value="${month}">${formatMonthKey(month)}</option>`).join("");
+  rankYearSelect.innerHTML = years.map((year) => `<option value="${year}">${year}年</option>`).join("");
+  rankMonthSelect.value = selectedRankMonth;
+  rankYearSelect.value = selectedRankYear;
+}
+
+function getRankRangeLabel() {
+  if (rankRange === "month") return formatMonthKey(selectedRankMonth);
+  if (rankRange === "year") return `${selectedRankYear}年`;
+  return RANGE_LABELS[rankRange];
+}
+
+function getRankRegionLabel() {
+  if (rankRegionScope === "all") return "全部地区";
+
+  const parts = getRegionParts(rankRegionBase);
+  if (rankRegionScope === "province") return parts.province;
+  if (rankRegionScope === "city") return `${parts.province} · ${parts.city}`;
+  return formatRegion(rankRegionBase);
+}
+
 function updateRegionButtons() {
-  allRegionButton.classList.toggle("is-active", selectedRegion === "全部地区");
+  regionPickerText.textContent = formatRegion(lastSpecificRegion);
+}
+
+function updateRankButtons() {
+  rankPageButton.classList.toggle("is-active", !rankPage.hidden);
+  document.querySelectorAll("[data-rank-scope]").forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.rankScope === rankRegionScope);
+  });
+  document.querySelectorAll("[data-rank-range]").forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.rankRange === rankRange);
+  });
+  rankMonthSelect.hidden = rankRange !== "month";
+  rankYearSelect.hidden = rankRange !== "year";
 }
 
 function updateRangeButtons() {
@@ -674,15 +933,27 @@ function updateRangeButtons() {
 }
 
 function render() {
-  currentRegion.textContent = formatRegion(selectedRegion);
-  regionPickerText.textContent = formatRegion(selectedRegion === "全部地区" ? lastSpecificRegion : selectedRegion);
+  currentRegion.textContent = formatRegion(lastSpecificRegion);
+  regionPickerText.textContent = formatRegion(lastSpecificRegion);
   todayCount.textContent = countRecords({ range: "today" });
   undoButton.disabled = records.length === 0;
-  sortBar.hidden = !sortingGroup;
-  sortBarText.textContent = sortingGroup ? `正在调整：${sortingGroup}` : "正在调整排序";
   updateRegionButtons();
   renderBrands();
   renderRanking();
+}
+
+function showRankPage() {
+  recordPage.hidden = true;
+  rankPage.hidden = false;
+  rankRegionBase = lastSpecificRegion;
+  rankPageButton.classList.add("is-active");
+  renderRanking();
+}
+
+function showRecordPage() {
+  rankPage.hidden = true;
+  recordPage.hidden = false;
+  rankPageButton.classList.remove("is-active");
 }
 
 function exportBackup() {
@@ -744,18 +1015,28 @@ function importBackup(file) {
 
 function formatRegion(regionName) {
   if (regionName === "全部地区") return "全部地区";
+  const { province, city, district } = getRegionParts(regionName);
+  if (province && city && district) {
+    if (city === province || province.endsWith("特别行政区")) return `${province} · ${district}`;
+    if (district === city) return `${province} · ${city}`;
+  }
   return regionName.replaceAll(" ", " · ");
 }
 
 function selectSpecificRegion(regionName) {
-  selectedRegion = regionName;
-  lastSpecificRegion = regionName;
-  statusText.textContent = `当前地区：${formatRegion(regionName)}`;
+  if (regionDialogMode === "rank") {
+    rankRegionBase = regionName;
+  } else {
+    selectedRegion = regionName;
+    lastSpecificRegion = regionName;
+    statusText.textContent = `当前地区：${formatRegion(regionName)}`;
+  }
   closeRegionDialog();
   render();
 }
 
-function openRegionDialog() {
+function openRegionDialog(mode = "record") {
+  regionDialogMode = mode;
   regionDialog.hidden = false;
   regionSearchInput.value = "";
   regionStep = "province";
@@ -769,6 +1050,47 @@ function closeRegionDialog() {
   regionDialog.hidden = true;
 }
 
+function shouldSkipCityStep(province) {
+  if (!province || province.cities.length !== 1) return false;
+  const cityName = province.cities[0].city;
+  return cityName === province.province || province.province.endsWith("特别行政区");
+}
+
+function isSelfOnlyCity(city) {
+  return city && city.districts.length === 1 && city.districts[0] === city.city;
+}
+
+function makeRegionName(province, city, district) {
+  return `${province.province} ${city.city} ${district}`;
+}
+
+function chooseProvince(province) {
+  selectedProvince = province;
+  selectedCity = null;
+
+  if (shouldSkipCityStep(province)) {
+    selectedCity = province.cities[0];
+    regionStep = "district";
+    renderRegionList();
+    return;
+  }
+
+  regionStep = "city";
+  renderRegionList();
+}
+
+function chooseCity(city) {
+  selectedCity = city;
+
+  if (isSelfOnlyCity(city)) {
+    selectSpecificRegion(makeRegionName(selectedProvince, city, city.city));
+    return;
+  }
+
+  regionStep = "district";
+  renderRegionList();
+}
+
 function renderRegionList() {
   regionList.innerHTML = "";
   regionList.hidden = regionSearchInput.value.trim().length > 0;
@@ -778,12 +1100,7 @@ function renderRegionList() {
     regionPathText.textContent = "请选择省级地区";
     REGION_TREE.forEach((province) => {
       const button = createRegionOption(province.province, false);
-      button.addEventListener("click", () => {
-        selectedProvince = province;
-        selectedCity = null;
-        regionStep = "city";
-        renderRegionList();
-      });
+      button.addEventListener("click", () => chooseProvince(province));
       regionList.append(button);
     });
     return;
@@ -793,20 +1110,18 @@ function renderRegionList() {
     regionPathText.textContent = selectedProvince.province;
     selectedProvince.cities.forEach((city) => {
       const button = createRegionOption(city.city, false);
-      button.addEventListener("click", () => {
-        selectedCity = city;
-        regionStep = "district";
-        renderRegionList();
-      });
+      button.addEventListener("click", () => chooseCity(city));
       regionList.append(button);
     });
     return;
   }
 
   if (regionStep === "district" && selectedProvince && selectedCity) {
-    regionPathText.textContent = `${selectedProvince.province} > ${selectedCity.city}`;
+    regionPathText.textContent = shouldSkipCityStep(selectedProvince)
+      ? selectedProvince.province
+      : `${selectedProvince.province} > ${selectedCity.city}`;
     selectedCity.districts.forEach((district) => {
-      const regionName = `${selectedProvince.province} ${selectedCity.city} ${district}`;
+      const regionName = makeRegionName(selectedProvince, selectedCity, district);
       const button = createRegionOption(district, regionName === lastSpecificRegion);
       button.addEventListener("click", () => selectSpecificRegion(regionName));
       regionList.append(button);
@@ -859,8 +1174,13 @@ function renderRegionSearch() {
 
 function goBackRegionStep() {
   if (regionStep === "district") {
-    regionStep = "city";
-    selectedCity = null;
+    if (shouldSkipCityStep(selectedProvince)) {
+      regionStep = "province";
+      selectedProvince = null;
+    } else {
+      regionStep = "city";
+      selectedCity = null;
+    }
   } else if (regionStep === "city") {
     regionStep = "province";
     selectedProvince = null;
@@ -888,21 +1208,57 @@ function closeBrandMenu() {
 function startSortMode() {
   if (!activeBrandGroup || activeBrandGroup === "常用") return;
   sortingGroup = activeBrandGroup;
-  collapsedGroups[sortingGroup] = false;
-  saveCollapsedGroups();
   closeBrandMenu();
-  statusText.textContent = `正在调整${sortingGroup}分组，拖动品牌改变位置`;
-  render();
+  renderSortDialog();
+  sortDialog.hidden = false;
 }
 
 function stopSortMode() {
-  if (sortingGroup) {
-    const grid = [...document.querySelectorAll(".brand-group")].find((group) => group.dataset.group === sortingGroup)?.querySelector(".brand-grid");
-    saveGroupOrder(sortingGroup, grid);
-  }
   sortingGroup = null;
   dragState = null;
-  statusText.textContent = "排序已完成";
+  sortDialog.hidden = true;
+}
+
+function renderSortDialog() {
+  const group = BRAND_GROUPS.find((item) => item.name === sortingGroup);
+  if (!group) return;
+
+  sortTitle.textContent = `调整${group.name}排序`;
+  sortList.innerHTML = "";
+
+  getGroupBrands(group.name, group.brands).forEach((brand) => {
+    const item = document.createElement("li");
+    item.className = "sort-item";
+    item.dataset.brand = brand;
+    item.innerHTML = `
+      <span class="sort-handle">≡</span>
+      <strong>${brand}</strong>
+    `;
+
+    item.addEventListener("pointerdown", (event) => {
+      item.setPointerCapture?.(event.pointerId);
+      dragState = { active: true, item };
+      item.classList.add("is-dragging");
+    });
+    item.addEventListener("pointermove", updateFloatingDrag);
+    item.addEventListener("pointerup", () => {
+      item.classList.remove("is-dragging");
+      dragState = null;
+    });
+    item.addEventListener("pointercancel", () => {
+      item.classList.remove("is-dragging");
+      dragState = null;
+    });
+
+    sortList.append(item);
+  });
+}
+
+function saveSortDialog() {
+  if (!sortingGroup) return;
+  saveGroupOrder(sortingGroup, sortList);
+  statusText.textContent = `${sortingGroup}分组顺序已保存`;
+  stopSortMode();
   render();
 }
 
@@ -948,28 +1304,40 @@ function closeRecordDialog() {
   recordDialog.hidden = true;
 }
 
-document.querySelectorAll("[data-range]").forEach((button) => {
+document.querySelectorAll("[data-rank-range]").forEach((button) => {
   button.addEventListener("click", () => {
-    selectedRange = button.dataset.range;
-    updateRangeButtons();
+    rankRange = button.dataset.rankRange;
+    renderRanking();
+  });
+});
+
+document.querySelectorAll("[data-rank-scope]").forEach((button) => {
+  button.addEventListener("click", () => {
+    rankRegionScope = button.dataset.rankScope;
     renderRanking();
   });
 });
 
 undoButton.addEventListener("click", undoLastRecord);
+rankPageButton.addEventListener("click", showRankPage);
+backToRecordButton.addEventListener("click", showRecordPage);
 exportButton.addEventListener("click", exportBackup);
 importButton.addEventListener("click", () => importInput.click());
 importInput.addEventListener("change", () => importBackup(importInput.files[0]));
+rankMonthSelect.addEventListener("change", () => {
+  selectedRankMonth = rankMonthSelect.value;
+  renderRanking();
+});
+rankYearSelect.addEventListener("change", () => {
+  selectedRankYear = rankYearSelect.value;
+  renderRanking();
+});
 brandSearchButton.addEventListener("click", locateBrand);
 brandSearchInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter") locateBrand();
 });
-regionPickerButton.addEventListener("click", openRegionDialog);
-allRegionButton.addEventListener("click", () => {
-  selectedRegion = selectedRegion === "全部地区" ? lastSpecificRegion : "全部地区";
-  statusText.textContent = `当前地区：${formatRegion(selectedRegion)}`;
-  render();
-});
+regionPickerButton.addEventListener("click", () => openRegionDialog("record"));
+rankRegionButton.addEventListener("click", () => openRegionDialog("rank"));
 regionCloseButton.addEventListener("click", closeRegionDialog);
 regionBackButton.addEventListener("click", goBackRegionStep);
 regionSearchInput.addEventListener("input", renderRegionSearch);
@@ -980,9 +1348,13 @@ menuCloseButton.addEventListener("click", closeBrandMenu);
 menuViewButton.addEventListener("click", () => activeBrand && openRecordDialog(activeBrand));
 menuSortButton.addEventListener("click", startSortMode);
 menuMinusButton.addEventListener("click", () => activeBrand && removeLatestBrandRecord(activeBrand));
-sortDoneButton.addEventListener("click", stopSortMode);
+sortCloseButton.addEventListener("click", stopSortMode);
+sortSaveButton.addEventListener("click", saveSortDialog);
 brandMenu.addEventListener("click", (event) => {
   if (event.target === brandMenu) closeBrandMenu();
+});
+sortDialog.addEventListener("click", (event) => {
+  if (event.target === sortDialog) stopSortMode();
 });
 recordCloseButton.addEventListener("click", closeRecordDialog);
 recordDialog.addEventListener("click", (event) => {

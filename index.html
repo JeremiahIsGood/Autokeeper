@@ -20,18 +20,20 @@
           <h1>计车器</h1>
           <p id="statusText">选择地区后点击品牌记录</p>
         </div>
-        <button class="icon-button" id="undoButton" type="button" aria-label="撤销上一次记录" title="撤销上一次记录">
-          ↶
-        </button>
+        <div class="top-actions">
+          <button class="icon-button chart-button" id="rankPageButton" type="button" aria-label="排行榜" title="排行榜">
+            <span></span><span></span><span></span>
+          </button>
+          <button class="icon-button" id="undoButton" type="button" aria-label="撤销上一次记录" title="撤销上一次记录">↶</button>
+        </div>
       </header>
 
-      <main>
+      <main id="recordPage">
         <section class="region-strip" aria-label="地区选择">
           <button class="region-picker-button" id="regionPickerButton" type="button">
             <span>当前地区</span>
             <strong id="regionPickerText">广东省 · 广州市 · 天河区</strong>
           </button>
-          <button class="all-region-button" id="allRegionButton" type="button">全部地区</button>
         </section>
 
         <section class="today-bar" aria-live="polite">
@@ -46,31 +48,46 @@
           <button id="brandSearchButton" type="button">定位</button>
         </section>
 
-        <section class="sort-bar" id="sortBar" hidden>
-          <span id="sortBarText">正在调整排序</span>
-          <button id="sortDoneButton" type="button">完成</button>
+        <section class="brand-groups" id="brandGrid" aria-label="汽车品牌记录按钮"></section>
+      </main>
+
+      <main id="rankPage" hidden>
+        <section class="page-head">
+          <button class="text-button muted-button" id="backToRecordButton" type="button">返回记录</button>
+          <h2 id="rankTitle">排行榜</h2>
         </section>
 
-        <section class="brand-groups" id="brandGrid" aria-label="汽车品牌记录按钮"></section>
-
-        <section class="tabs" aria-label="统计范围">
-          <button class="tab is-active" type="button" data-range="today">今日</button>
-          <button class="tab" type="button" data-range="week">本周</button>
-          <button class="tab" type="button" data-range="month">本月</button>
-          <button class="tab" type="button" data-range="year">本年</button>
-          <button class="tab" type="button" data-range="all">全部</button>
+        <section class="rank-filters" aria-label="排行榜筛选">
+          <button class="region-picker-button" id="rankRegionButton" type="button">
+            <span>排行榜基准地区</span>
+            <strong id="rankRegionText">广东省 · 广州市 · 天河区</strong>
+          </button>
+          <div class="scope-tabs" aria-label="地区范围">
+            <button class="tab is-active" type="button" data-rank-scope="district">区县</button>
+            <button class="tab" type="button" data-rank-scope="city">城市</button>
+            <button class="tab" type="button" data-rank-scope="province">省级</button>
+            <button class="tab" type="button" data-rank-scope="all">全部</button>
+          </div>
+          <div class="tabs rank-tabs" aria-label="统计范围">
+            <button class="tab is-active" type="button" data-rank-range="today">今日</button>
+            <button class="tab" type="button" data-rank-range="week">本周</button>
+            <button class="tab" type="button" data-rank-range="month">月份</button>
+            <button class="tab" type="button" data-rank-range="year">年份</button>
+            <button class="tab" type="button" data-rank-range="all">全部</button>
+          </div>
+          <div class="rank-selects">
+            <select id="rankMonthSelect" hidden></select>
+            <select id="rankYearSelect" hidden></select>
+          </div>
         </section>
 
         <section class="rank-panel" aria-label="排行榜">
-          <div class="section-head">
-            <h2 id="rankTitle">今日排行榜</h2>
-            <div class="backup-actions">
-              <button class="text-button" id="importButton" type="button">导入</button>
-              <button class="text-button" id="exportButton" type="button">导出</button>
-              <input id="importInput" type="file" accept="application/json,.json" hidden>
-            </div>
-          </div>
           <ol class="rank-list" id="rankList"></ol>
+          <div class="backup-actions rank-backup-actions">
+            <button class="text-button" id="importButton" type="button">导入</button>
+            <button class="text-button" id="exportButton" type="button">导出</button>
+            <input id="importInput" type="file" accept="application/json,.json" hidden>
+          </div>
         </section>
       </main>
     </div>
@@ -92,6 +109,17 @@
           <button class="small-close" id="recordCloseButton" type="button" aria-label="关闭">×</button>
         </div>
         <ol class="record-list" id="recordList"></ol>
+      </section>
+    </div>
+
+    <div class="modal-backdrop" id="sortDialog" hidden>
+      <section class="modal-sheet large" role="dialog" aria-modal="true" aria-labelledby="sortTitle">
+        <div class="modal-head">
+          <h2 id="sortTitle">调整排序</h2>
+          <button class="small-close" id="sortCloseButton" type="button" aria-label="关闭">×</button>
+        </div>
+        <ol class="sort-list" id="sortList"></ol>
+        <button class="menu-action" id="sortSaveButton" type="button">保存排序</button>
       </section>
     </div>
 
