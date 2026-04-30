@@ -696,7 +696,7 @@ function addRecord(brand, button) {
 
 function flashButton(button) {
   button.classList.add("flash");
-  window.setTimeout(() => button.classList.remove("flash"), 180);
+  window.setTimeout(() => button.classList.remove("flash"), 260);
 }
 
 function undoLastRecord() {
@@ -771,11 +771,13 @@ function createBrandButton(brand, groupName, canDrag) {
       if (activeTouchPointers.size > 1) {
         isMultiTouchGesture = true;
         clearLongPressTimer();
+        button.classList.remove("is-pressing");
         longPressPointerId = null;
         return;
       }
     }
 
+    button.classList.add("is-pressing");
     longPressTriggered = false;
     longPressPointerId = event.pointerId;
     longPressStartX = event.clientX;
@@ -794,6 +796,7 @@ function createBrandButton(brand, groupName, canDrag) {
       const moveY = Math.abs(event.clientY - longPressStartY);
       if (moveX > LONG_PRESS_MOVE_LIMIT || moveY > LONG_PRESS_MOVE_LIMIT) {
         clearLongPressTimer();
+        button.classList.remove("is-pressing");
       }
     }
     updateFloatingDrag(event);
@@ -809,6 +812,7 @@ function createBrandButton(brand, groupName, canDrag) {
     }
 
     clearLongPressTimer();
+    button.classList.remove("is-pressing");
     const wasLongPress = longPressTriggered;
     const wasPrimaryPointer = event.pointerId === longPressPointerId;
     dragState = null;
@@ -828,6 +832,7 @@ function createBrandButton(brand, groupName, canDrag) {
       }
     }
     clearLongPressTimer();
+    button.classList.remove("is-pressing");
     longPressPointerId = null;
     dragState = null;
   });

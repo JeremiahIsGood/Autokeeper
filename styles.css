@@ -340,7 +340,7 @@ h1 {
   user-select: none;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
-  transition: transform 160ms ease, background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+  transition: transform 120ms ease, background-color 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
 }
 
 body[data-button-size="medium"] .brand-button {
@@ -375,10 +375,23 @@ body[data-button-size="compact"] .brand-count {
 }
 
 .brand-button:active,
+.brand-button.is-pressing {
+  transform: scale(0.97);
+  background: #eefbf8;
+  border-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(15, 118, 110, 0.16);
+}
+
 .brand-button.flash {
-  transform: translateY(1px);
+  transform: scale(1.02);
   background: var(--accent-soft);
   border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.18), 0 8px 18px rgba(23, 33, 31, 0.08);
+}
+
+.brand-button.flash .brand-count {
+  transform: scale(1.18);
+  color: var(--accent-dark);
 }
 
 .brand-button.is-dragging {
@@ -412,6 +425,7 @@ body[data-button-size="compact"] .brand-count {
   color: var(--muted);
   font-size: 14px;
   font-weight: 800;
+  transition: transform 140ms ease, color 140ms ease;
 }
 
 .rank-panel {
