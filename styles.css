@@ -563,7 +563,7 @@ h2 {
   border-radius: 8px;
   background: #fbfcfa;
   color: var(--text);
-  touch-action: none;
+  touch-action: pan-y;
   user-select: none;
   -webkit-user-select: none;
 }
@@ -575,10 +575,15 @@ h2 {
 }
 
 .sort-handle {
+  display: grid;
+  width: 44px;
+  min-height: 52px;
+  place-items: center;
   color: var(--warning);
   font-size: 22px;
   font-weight: 900;
   text-align: center;
+  touch-action: none;
 }
 
 .record-item {

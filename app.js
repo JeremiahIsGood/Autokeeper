@@ -1236,6 +1236,8 @@ function renderSortDialog() {
     `;
 
     item.addEventListener("pointerdown", (event) => {
+      if (!event.target.closest(".sort-handle")) return;
+      event.preventDefault();
       item.setPointerCapture?.(event.pointerId);
       dragState = { active: true, item };
       item.classList.add("is-dragging");
