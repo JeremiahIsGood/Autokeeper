@@ -57,7 +57,7 @@ button {
 .top-actions {
   display: flex;
   flex: 0 0 auto;
-  gap: 10px;
+  gap: 8px;
 }
 
 h1,
@@ -82,14 +82,18 @@ h1 {
 
 .icon-button {
   flex: 0 0 auto;
-  width: 54px;
-  height: 54px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   background: var(--surface);
   color: var(--accent-dark);
   box-shadow: var(--shadow);
-  font-size: 30px;
+  font-size: 28px;
   line-height: 1;
+}
+
+.settings-button {
+  font-size: 24px;
 }
 
 .icon-button:disabled {
@@ -339,6 +343,23 @@ h1 {
   transition: transform 160ms ease, background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
 }
 
+body[data-button-size="medium"] .brand-button {
+  min-height: 78px;
+}
+
+body[data-button-size="compact"] .brand-button {
+  min-height: 64px;
+  padding: 8px;
+}
+
+body[data-button-size="compact"] .brand-button:not(.has-logo) .brand-name {
+  font-size: 18px;
+}
+
+body[data-button-size="compact"] .brand-count {
+  font-size: 17px;
+}
+
 .brand-logo-wrap {
   display: grid;
   width: 84px;
@@ -396,6 +417,109 @@ h1 {
 .rank-panel {
   margin-top: 12px;
   padding-bottom: 24px;
+}
+
+.settings-section {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.settings-section h3 {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.settings-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 54px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--text);
+  text-align: left;
+}
+
+.settings-row span {
+  min-width: 0;
+  font-weight: 900;
+}
+
+.settings-row strong {
+  min-width: 0;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 900;
+  text-align: right;
+}
+
+.static-row {
+  cursor: default;
+}
+
+.danger-row {
+  color: #991b1b;
+}
+
+.switch-row input {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--accent);
+}
+
+.select-row select {
+  min-height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--text);
+  font: inherit;
+  font-weight: 800;
+}
+
+.settings-stats,
+.settings-list {
+  display: grid;
+  gap: 8px;
+}
+
+.settings-stats div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.62);
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.settings-stats strong {
+  color: var(--text);
+  text-align: right;
+}
+
+.settings-list-title {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.recent-region-button {
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--text);
+  font-weight: 800;
+  text-align: left;
 }
 
 .section-head {
@@ -751,6 +875,28 @@ h2 {
     padding-left: 12px;
   }
 
+  .topbar {
+    gap: 10px;
+  }
+
+  h1 {
+    font-size: 26px;
+  }
+
+  .top-actions {
+    gap: 6px;
+  }
+
+  .icon-button {
+    width: 44px;
+    height: 44px;
+    font-size: 25px;
+  }
+
+  .settings-button {
+    font-size: 22px;
+  }
+
   .region-strip {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -761,6 +907,14 @@ h2 {
 
   .brand-button {
     min-height: 84px;
+  }
+
+  body[data-button-size="medium"] .brand-button {
+    min-height: 72px;
+  }
+
+  body[data-button-size="compact"] .brand-button {
+    min-height: 62px;
   }
 
   .tabs {

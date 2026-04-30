@@ -1,4 +1,4 @@
-const CACHE_NAME = "jicheqi-v28";
+const CACHE_NAME = "jicheqi-v30";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -170,6 +170,12 @@ self.addEventListener("activate", (event) => {
       .keys()
       .then((keys) => Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))))
   );
+});
+
+self.addEventListener("message", (event) => {
+  if (event.data?.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
 });
 
 self.addEventListener("fetch", (event) => {

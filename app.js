@@ -365,6 +365,8 @@ const BRAND_LOGOS = {
 };
 
 const STORAGE_KEY = "jicheqi.records.v1";
+const APP_VERSION = "1.0.0";
+const SETTINGS_KEY = `${STORAGE_KEY}.settings`;
 const RANGE_LABELS = {
   today: "今日",
   week: "本周",
@@ -373,7 +375,8 @@ const RANGE_LABELS = {
   all: "全部",
 };
 
-let selectedRegion = "广东省 广州市 天河区";
+let appSettings = loadAppSettings();
+let selectedRegion = appSettings.defaultRegion;
 let lastSpecificRegion = selectedRegion;
 let selectedRange = "today";
 let rankRegionBase = selectedRegion;
@@ -404,16 +407,17 @@ let selectedCity = null;
 const brandGrid = document.querySelector("#brandGrid");
 const recordPage = document.querySelector("#recordPage");
 const rankPage = document.querySelector("#rankPage");
+const settingsPage = document.querySelector("#settingsPage");
 const rankPageButton = document.querySelector("#rankPageButton");
+const settingsPageButton = document.querySelector("#settingsPageButton");
 const backToRecordButton = document.querySelector("#backToRecordButton");
+const backFromSettingsButton = document.querySelector("#backFromSettingsButton");
 const rankList = document.querySelector("#rankList");
 const rankTitle = document.querySelector("#rankTitle");
 const statusText = document.querySelector("#statusText");
 const undoButton = document.querySelector("#undoButton");
 const currentRegion = document.querySelector("#currentRegion");
 const todayCount = document.querySelector("#todayCount");
-const exportButton = document.querySelector("#exportButton");
-const importButton = document.querySelector("#importButton");
 const importInput = document.querySelector("#importInput");
 const brandSearchInput = document.querySelector("#brandSearchInput");
 const brandSearchButton = document.querySelector("#brandSearchButton");
@@ -446,7 +450,51 @@ const regionPathText = document.querySelector("#regionPathText");
 const regionPath = document.querySelector(".region-path");
 const regionList = document.querySelector("#regionList");
 const regionSearchResults = document.querySelector("#regionSearchResults");
+const updateAppButton = document.querySelector("#updateAppButton");
+const updateStatusText = document.querySelector("#updateStatusText");
+const reloadAppButton = document.querySelector("#reloadAppButton");
+const appVersionText = document.querySelector("#appVersionText");
+const settingsImportButton = document.querySelector("#settingsImportButton");
+const settingsExportButton = document.querySelector("#settingsExportButton");
+const clearDataButton = document.querySelector("#clearDataButton");
+const dataStats = document.querySelector("#dataStats");
+const showLogoToggle = document.querySelector("#showLogoToggle");
+const buttonSizeSelect = document.querySelector("#buttonSizeSelect");
+const resetBrandOrderButton = document.querySelector("#resetBrandOrderButton");
+const defaultRegionButton = document.querySelector("#defaultRegionButton");
+const defaultRegionText = document.querySelector("#defaultRegionText");
+const recentRegionsList = document.querySelector("#recentRegionsList");
 let regionDialogMode = "record";
+
+function loadAppSettings() {
+  const fallback = {
+    defaultRegion: "广东省 广州市 天河区",
+    showLogos: true,
+    buttonSize: "large",
+    recentRegions: ["广东省 广州市 天河区"],
+  };
+
+  try {
+    const saved = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
+    return {
+      ...fallback,
+      ...saved,
+      recentRegions: Array.isArray(saved.recentRegions) && saved.recentRegions.length > 0 ? saved.recentRegions : fallback.recentRegions,
+    };
+  } catch {
+    return fallback;
+  }
+}
+
+function saveAppSettings() {
+  localStorage.setItem(SETTINGS_KEY, JSON.stringify(appSettings));
+}
+
+function rememberRegion(regionName) {
+  if (!regionName || regionName === "全部地区") return;
+  appSettings.recentRegions = [regionName, ...appSettings.recentRegions.filter((item) => item !== regionName)].slice(0, 6);
+  saveAppSettings();
+}
 
 function loadRecords() {
   try {
@@ -709,7 +757,7 @@ function createBrandButton(brand, groupName, canDrag) {
   button.dataset.brand = brand;
   button.dataset.group = groupName;
   button.dataset.canDrag = String(canDrag);
-  const logo = BRAND_LOGOS[brand];
+  const logo = appSettings.showLogos ? BRAND_LOGOS[brand] : "";
   button.classList.toggle("has-logo", Boolean(logo));
   button.innerHTML = `
     ${logo ? `<span class="brand-logo-wrap"><img class="brand-logo" src="${logo}" alt="${brand}车标"></span>` : ""}
@@ -992,6 +1040,7 @@ function updateRangeButtons() {
 }
 
 function render() {
+  document.body.dataset.buttonSize = appSettings.buttonSize;
   currentRegion.textContent = formatRegion(lastSpecificRegion);
   regionPickerText.textContent = formatRegion(lastSpecificRegion);
   todayCount.textContent = countRecords({ range: "today" });
@@ -999,20 +1048,99 @@ function render() {
   updateRegionButtons();
   renderBrands();
   renderRanking();
+  renderSettings();
 }
 
 function showRankPage() {
   recordPage.hidden = true;
+  settingsPage.hidden = true;
   rankPage.hidden = false;
   rankRegionBase = lastSpecificRegion;
   rankPageButton.classList.add("is-active");
+  settingsPageButton.classList.remove("is-active");
   renderRanking();
+}
+
+function showSettingsPage() {
+  recordPage.hidden = true;
+  rankPage.hidden = true;
+  settingsPage.hidden = false;
+  rankPageButton.classList.remove("is-active");
+  settingsPageButton.classList.add("is-active");
+  renderSettings();
 }
 
 function showRecordPage() {
   rankPage.hidden = true;
+  settingsPage.hidden = true;
   recordPage.hidden = false;
   rankPageButton.classList.remove("is-active");
+  settingsPageButton.classList.remove("is-active");
+}
+
+function formatDateTime(value) {
+  if (!value) return "无";
+  return new Date(value).toLocaleString("zh-CN", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+function getBusiestDay() {
+  if (records.length === 0) return "无";
+
+  const totals = new Map();
+  records.forEach((record) => {
+    const day = new Date(record.time).toLocaleDateString("zh-CN", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+    totals.set(day, (totals.get(day) || 0) + 1);
+  });
+
+  const [day, count] = [...totals.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0];
+  return `${day}（${count} 条）`;
+}
+
+function renderSettings() {
+  appVersionText.textContent = APP_VERSION;
+  defaultRegionText.textContent = formatRegion(appSettings.defaultRegion);
+  showLogoToggle.checked = appSettings.showLogos;
+  buttonSizeSelect.value = appSettings.buttonSize;
+
+  const sortedRecords = [...records].sort((a, b) => new Date(a.time) - new Date(b.time));
+  const firstRecord = sortedRecords[0];
+  const lastRecord = sortedRecords[sortedRecords.length - 1];
+
+  dataStats.innerHTML = `
+    <div><span>总记录数</span><strong>${records.length}</strong></div>
+    <div><span>最早记录</span><strong>${formatDateTime(firstRecord?.time)}</strong></div>
+    <div><span>最后记录</span><strong>${formatDateTime(lastRecord?.time)}</strong></div>
+    <div><span>记录最多的日子</span><strong>${getBusiestDay()}</strong></div>
+  `;
+
+  recentRegionsList.innerHTML = `
+    <span class="settings-list-title">最近使用地区</span>
+  `;
+  appSettings.recentRegions.forEach((regionName) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "recent-region-button";
+    button.textContent = formatRegion(regionName);
+    button.addEventListener("click", () => {
+      selectedRegion = regionName;
+      lastSpecificRegion = regionName;
+      rememberRegion(regionName);
+      statusText.textContent = `当前地区：${formatRegion(regionName)}`;
+      showRecordPage();
+      render();
+    });
+    recentRegionsList.append(button);
+  });
 }
 
 function exportBackup() {
@@ -1085,9 +1213,14 @@ function formatRegion(regionName) {
 function selectSpecificRegion(regionName) {
   if (regionDialogMode === "rank") {
     rankRegionBase = regionName;
+  } else if (regionDialogMode === "default") {
+    appSettings.defaultRegion = regionName;
+    rememberRegion(regionName);
+    statusText.textContent = `默认地区：${formatRegion(regionName)}`;
   } else {
     selectedRegion = regionName;
     lastSpecificRegion = regionName;
+    rememberRegion(regionName);
     statusText.textContent = `当前地区：${formatRegion(regionName)}`;
   }
   closeRegionDialog();
@@ -1371,6 +1504,64 @@ function closeRecordDialog() {
   recordDialog.hidden = true;
 }
 
+async function updateApp() {
+  updateStatusText.textContent = "正在检查更新";
+
+  if (!("serviceWorker" in navigator)) {
+    updateStatusText.textContent = "当前浏览器不支持";
+    return;
+  }
+
+  try {
+    const registration = await navigator.serviceWorker.getRegistration();
+    if (!registration) {
+      updateStatusText.textContent = "未发现缓存";
+      return;
+    }
+
+    await registration.update();
+    if (registration.waiting) {
+      updateStatusText.textContent = "已获取新版";
+      if (window.confirm("已获取新版，是否立即刷新？")) {
+        registration.waiting.postMessage({ type: "SKIP_WAITING" });
+        window.location.reload();
+      }
+      return;
+    }
+
+    updateStatusText.textContent = "已是最新";
+  } catch {
+    updateStatusText.textContent = "检查失败";
+  }
+}
+
+function clearAllData() {
+  if (!window.confirm("清空后会删除所有本地记录、排序和设置。确定继续吗？")) return;
+  if (!window.confirm("请再次确认：真的清空全部数据吗？")) return;
+
+  records = [];
+  collapsedGroups = {};
+  brandOrders = {};
+  localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(`${STORAGE_KEY}.collapsedGroups`);
+  localStorage.removeItem(`${STORAGE_KEY}.brandOrders`);
+  localStorage.removeItem(SETTINGS_KEY);
+  appSettings = loadAppSettings();
+  selectedRegion = appSettings.defaultRegion;
+  lastSpecificRegion = selectedRegion;
+  statusText.textContent = "全部本地数据已清空";
+  showRecordPage();
+  render();
+}
+
+function resetBrandOrder() {
+  if (!window.confirm("确定恢复所有品牌的默认排序吗？")) return;
+  brandOrders = {};
+  saveBrandOrders();
+  statusText.textContent = "品牌排序已重置";
+  render();
+}
+
 document.querySelectorAll("[data-rank-range]").forEach((button) => {
   button.addEventListener("click", () => {
     rankRange = button.dataset.rankRange;
@@ -1387,10 +1578,27 @@ document.querySelectorAll("[data-rank-scope]").forEach((button) => {
 
 undoButton.addEventListener("click", undoLastRecord);
 rankPageButton.addEventListener("click", showRankPage);
+settingsPageButton.addEventListener("click", showSettingsPage);
 backToRecordButton.addEventListener("click", showRecordPage);
-exportButton.addEventListener("click", exportBackup);
-importButton.addEventListener("click", () => importInput.click());
+backFromSettingsButton.addEventListener("click", showRecordPage);
+settingsExportButton.addEventListener("click", exportBackup);
+settingsImportButton.addEventListener("click", () => importInput.click());
 importInput.addEventListener("change", () => importBackup(importInput.files[0]));
+updateAppButton.addEventListener("click", updateApp);
+reloadAppButton.addEventListener("click", () => window.location.reload());
+clearDataButton.addEventListener("click", clearAllData);
+resetBrandOrderButton.addEventListener("click", resetBrandOrder);
+defaultRegionButton.addEventListener("click", () => openRegionDialog("default"));
+showLogoToggle.addEventListener("change", () => {
+  appSettings.showLogos = showLogoToggle.checked;
+  saveAppSettings();
+  render();
+});
+buttonSizeSelect.addEventListener("change", () => {
+  appSettings.buttonSize = buttonSizeSelect.value;
+  saveAppSettings();
+  render();
+});
 rankMonthSelect.addEventListener("change", () => {
   selectedRankMonth = rankMonthSelect.value;
   renderRanking();

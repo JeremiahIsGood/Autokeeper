@@ -21,6 +21,7 @@
           <p id="statusText">选择地区后点击品牌记录</p>
         </div>
         <div class="top-actions">
+          <button class="icon-button settings-button" id="settingsPageButton" type="button" aria-label="设置" title="设置">⚙</button>
           <button class="icon-button chart-button" id="rankPageButton" type="button" aria-label="排行榜" title="排行榜">
             <span></span><span></span><span></span>
           </button>
@@ -83,11 +84,80 @@
 
         <section class="rank-panel" aria-label="排行榜">
           <ol class="rank-list" id="rankList"></ol>
-          <div class="backup-actions rank-backup-actions">
-            <button class="text-button" id="importButton" type="button">导入</button>
-            <button class="text-button" id="exportButton" type="button">导出</button>
-            <input id="importInput" type="file" accept="application/json,.json" hidden>
+        </section>
+      </main>
+
+      <main id="settingsPage" hidden>
+        <section class="page-head">
+          <button class="text-button muted-button" id="backFromSettingsButton" type="button">返回记录</button>
+          <h2>设置</h2>
+        </section>
+
+        <section class="settings-section" aria-label="程序">
+          <h3>程序</h3>
+          <button class="settings-row" id="updateAppButton" type="button">
+            <span>更新程序</span>
+            <strong id="updateStatusText">检查新版</strong>
+          </button>
+          <div class="settings-row static-row">
+            <span>版本</span>
+            <strong id="appVersionText">1.0.0</strong>
           </div>
+          <button class="settings-row" id="reloadAppButton" type="button">
+            <span>重载页面</span>
+            <strong>不清数据</strong>
+          </button>
+        </section>
+
+        <section class="settings-section" aria-label="数据">
+          <h3>数据</h3>
+          <button class="settings-row" id="settingsImportButton" type="button">
+            <span>数据导入</span>
+            <strong>选择备份</strong>
+          </button>
+          <button class="settings-row" id="settingsExportButton" type="button">
+            <span>数据导出</span>
+            <strong>保存备份</strong>
+          </button>
+          <input id="importInput" type="file" accept="application/json,.json" hidden>
+          <button class="settings-row danger-row" id="clearDataButton" type="button">
+            <span>清空全部数据</span>
+            <strong>需二次确认</strong>
+          </button>
+          <div class="settings-stats" id="dataStats"></div>
+        </section>
+
+        <section class="settings-section" aria-label="显示">
+          <h3>显示</h3>
+          <label class="settings-row switch-row">
+            <span>显示车标</span>
+            <input id="showLogoToggle" type="checkbox">
+          </label>
+          <label class="settings-row select-row">
+            <span>按钮大小</span>
+            <select id="buttonSizeSelect">
+              <option value="large">大</option>
+              <option value="medium">中</option>
+              <option value="compact">紧凑</option>
+            </select>
+          </label>
+        </section>
+
+        <section class="settings-section" aria-label="品牌">
+          <h3>品牌</h3>
+          <button class="settings-row" id="resetBrandOrderButton" type="button">
+            <span>重置品牌排序</span>
+            <strong>恢复默认</strong>
+          </button>
+        </section>
+
+        <section class="settings-section" aria-label="地区">
+          <h3>地区</h3>
+          <button class="settings-row" id="defaultRegionButton" type="button">
+            <span>默认地区</span>
+            <strong id="defaultRegionText">广东省 · 广州市 · 天河区</strong>
+          </button>
+          <div class="settings-list" id="recentRegionsList"></div>
         </section>
       </main>
     </div>
