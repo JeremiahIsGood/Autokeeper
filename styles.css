@@ -141,6 +141,41 @@ h1 {
   margin-bottom: 12px;
 }
 
+.country-list {
+  display: grid;
+  gap: 10px;
+}
+
+.country-option {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  min-height: 58px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcfa;
+  color: var(--text);
+  text-align: left;
+}
+
+.country-option.is-active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-dark);
+}
+
+.country-flag {
+  font-size: 30px;
+  line-height: 1;
+}
+
+.country-option strong {
+  font-size: 17px;
+  font-weight: 900;
+}
+
 .tabs {
   grid-template-columns: repeat(5, minmax(0, 1fr));
   margin-top: 18px;

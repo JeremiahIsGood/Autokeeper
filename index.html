@@ -67,7 +67,7 @@
             <button class="tab is-active" type="button" data-rank-scope="district">区县</button>
             <button class="tab" type="button" data-rank-scope="city">城市</button>
             <button class="tab" type="button" data-rank-scope="province">省级</button>
-            <button class="tab" type="button" data-rank-scope="all">全部</button>
+            <button class="tab" type="button" data-rank-scope="all">全国</button>
           </div>
           <div class="tabs rank-tabs" aria-label="统计范围">
             <button class="tab is-active" type="button" data-rank-range="today">今日</button>
@@ -101,7 +101,7 @@
           </button>
           <div class="settings-row static-row">
             <span>版本</span>
-            <strong id="appVersionText">1.0.0</strong>
+            <strong id="appVersionText">1.1.0</strong>
           </div>
           <button class="settings-row" id="reloadAppButton" type="button">
             <span>重载页面</span>
@@ -157,6 +157,10 @@
             <span>默认地区</span>
             <strong id="defaultRegionText">广东省 · 广州市 · 天河区</strong>
           </button>
+          <button class="settings-row" id="countryPickerButton" type="button">
+            <span>当前国家</span>
+            <strong id="countryPickerText">🇨🇳 中国</strong>
+          </button>
           <div class="settings-list" id="recentRegionsList"></div>
         </section>
       </main>
@@ -206,6 +210,25 @@
         </div>
         <div class="region-list" id="regionList" aria-label="地区列表"></div>
         <div class="search-results" id="regionSearchResults" hidden></div>
+      </section>
+    </div>
+
+    <div class="modal-backdrop" id="countryDialog" hidden>
+      <section class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="countryTitle">
+        <div class="modal-head">
+          <h2 id="countryTitle">选择国家</h2>
+          <button class="small-close" id="countryCloseButton" type="button" aria-label="关闭">×</button>
+        </div>
+        <div class="country-list">
+          <button class="country-option" type="button" data-country="CN">
+            <span class="country-flag">🇨🇳</span>
+            <strong>中国</strong>
+          </button>
+          <button class="country-option" type="button" data-country="US">
+            <span class="country-flag">🇺🇸</span>
+            <strong>美国</strong>
+          </button>
+        </div>
       </section>
     </div>
 
