@@ -1,4 +1,4 @@
-const CACHE_NAME = "jicheqi-v31";
+const CACHE_NAME = "jicheqi-v36";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -157,7 +157,15 @@ const APP_FILES = [
   "./logos/logo-147.png",
   "./logos/logo-148.png",
   "./logos/logo-149.png",
-  "./logos/logo-150.png"
+  "./logos/logo-150.png",
+  "./logos/logo-151.png",
+  "./logos/logo-152.png",
+  "./logos/logo-153.png",
+  "./logos/logo-154.png",
+  "./logos/logo-155.png",
+  "./logos/logo-156.png",
+  "./logos/logo-157.png",
+  "./logos/logo-158.png"
 ];
 
 self.addEventListener("install", (event) => {

@@ -16,6 +16,7 @@ const BRAND_GROUPS = [
       "尊界",
       "享界",
       "奇瑞",
+      "瑞麒",
       "长安",
       "启辰",
       "领克",
@@ -196,8 +197,106 @@ const BRAND_GROUPS = [
   }
 ];
 
-const BRANDS = [...new Set(BRAND_GROUPS.flatMap((group) => group.brands))];
-const REGION_OPTIONS = window.REGION_OPTIONS || window.REGION_TREE.flatMap((province) =>
+const CHINA_BRAND_GROUPS = BRAND_GROUPS;
+const US_BRAND_GROUPS = [
+  {
+    name: "美国品牌",
+    brands: ["福特", "雪佛兰", "特斯拉", "别克", "凯迪拉克", "林肯", "吉普", "道奇", "克莱斯勒", "GMC", "公羊", "路西德", "里维安", "水星", "庞蒂亚克"],
+  },
+  {
+    name: "日本品牌",
+    brands: ["丰田", "本田", "日产", "斯巴鲁", "雷克萨斯", "马自达", "三菱", "讴歌", "英菲尼迪", "铃木"],
+  },
+  {
+    name: "韩国品牌",
+    brands: ["现代", "起亚", "捷尼赛斯"],
+  },
+  {
+    name: "德国品牌",
+    brands: ["大众", "奔驰", "宝马", "奥迪", "保时捷", "斯玛特", "迈巴赫"],
+  },
+  {
+    name: "英国品牌",
+    brands: ["路虎", "捷豹", "迷你", "阿斯顿·马丁", "宾利", "劳斯莱斯", "莲花", "英力士掷弹兵", "迈凯伦"],
+  },
+  {
+    name: "意大利品牌",
+    brands: ["法拉利", "兰博基尼", "玛莎拉蒂", "菲亚特", "阿尔法·罗密欧"],
+  },
+  {
+    name: "其他品牌",
+    brands: ["沃尔沃", "极星", "VinFast", "布加迪", "萨博"],
+  },
+];
+
+const US_STATES = [
+  "Alabama",
+  "Alaska",
+  "Arizona",
+  "Arkansas",
+  "California",
+  "Colorado",
+  "Connecticut",
+  "Delaware",
+  "Florida",
+  "Georgia",
+  "Hawaii",
+  "Idaho",
+  "Illinois",
+  "Indiana",
+  "Iowa",
+  "Kansas",
+  "Kentucky",
+  "Louisiana",
+  "Maine",
+  "Maryland",
+  "Massachusetts",
+  "Michigan",
+  "Minnesota",
+  "Mississippi",
+  "Missouri",
+  "Montana",
+  "Nebraska",
+  "Nevada",
+  "New Hampshire",
+  "New Jersey",
+  "New Mexico",
+  "New York",
+  "North Carolina",
+  "North Dakota",
+  "Ohio",
+  "Oklahoma",
+  "Oregon",
+  "Pennsylvania",
+  "Rhode Island",
+  "South Carolina",
+  "South Dakota",
+  "Tennessee",
+  "Texas",
+  "Utah",
+  "Vermont",
+  "Virginia",
+  "Washington",
+  "West Virginia",
+  "Wisconsin",
+  "Wyoming",
+  "District of Columbia",
+];
+
+const CHINA_REGION_TREE = window.REGION_TREE;
+const US_REGION_TREE = US_STATES.map((state) => ({
+  province: state,
+  cities: [{ city: state, districts: [state] }],
+}));
+
+let currentCountry = "CN";
+let activeBrandGroups = CHINA_BRAND_GROUPS;
+let BRANDS = [...new Set(activeBrandGroups.flatMap((group) => group.brands))];
+let activeRegionTree = CHINA_REGION_TREE;
+let REGION_OPTIONS = buildRegionOptions(activeRegionTree);
+
+function buildRegionOptions(regionTree) {
+  return regionTree.flatMap((province) =>
   province.cities.flatMap((city) =>
     city.districts.map((district) => {
       const name = `${province.province} ${city.city} ${district}`;
@@ -210,7 +309,8 @@ const REGION_OPTIONS = window.REGION_OPTIONS || window.REGION_TREE.flatMap((prov
       };
     })
   )
-);
+  );
+}
 const BRAND_LOGOS = {
   "DS": "logos/logo-001.png",
   "iCar": "logos/logo-002.png",
@@ -361,11 +461,38 @@ const BRAND_LOGOS = {
   "飞凡": "logos/logo-147.png",
   "马自达": "logos/logo-148.png",
   "高合": "logos/logo-149.png",
-  "魏牌": "logos/logo-150.png"
+  "魏牌": "logos/logo-150.png",
+  "GMC": "logos/logo-151.png",
+  "公羊": "logos/logo-152.png",
+  "里维安": "logos/logo-153.png",
+  "路西德": "logos/logo-154.png",
+  "水星": "logos/logo-155.png",
+  "VinFast": "logos/logo-156.png",
+  "庞蒂亚克": "logos/logo-157.png",
+  "瑞麒": "logos/logo-158.png"
+};
+
+const COUNTRY_CONFIGS = {
+  CN: {
+    name: "中国",
+    flag: "🇨🇳",
+    allRegionLabel: "全国",
+    defaultRegion: "广东省 广州市 天河区",
+    brandGroups: CHINA_BRAND_GROUPS,
+    regionTree: CHINA_REGION_TREE,
+  },
+  US: {
+    name: "美国",
+    flag: "🇺🇸",
+    allRegionLabel: "全国",
+    defaultRegion: "California California California",
+    brandGroups: US_BRAND_GROUPS,
+    regionTree: US_REGION_TREE,
+  },
 };
 
 const STORAGE_KEY = "jicheqi.records.v1";
-const APP_VERSION = "1.0.0";
+const APP_VERSION = "1.1.2";
 const SETTINGS_KEY = `${STORAGE_KEY}.settings`;
 const RANGE_LABELS = {
   today: "今日",
@@ -376,7 +503,8 @@ const RANGE_LABELS = {
 };
 
 let appSettings = loadAppSettings();
-let selectedRegion = appSettings.defaultRegion;
+setCountryState(appSettings.defaultCountry || "CN");
+let selectedRegion = getCountrySetting("defaultRegion");
 let lastSpecificRegion = selectedRegion;
 let selectedRange = "today";
 let rankRegionBase = selectedRegion;
@@ -464,22 +592,69 @@ const resetBrandOrderButton = document.querySelector("#resetBrandOrderButton");
 const defaultRegionButton = document.querySelector("#defaultRegionButton");
 const defaultRegionText = document.querySelector("#defaultRegionText");
 const recentRegionsList = document.querySelector("#recentRegionsList");
+const countryPickerButton = document.querySelector("#countryPickerButton");
+const countryPickerText = document.querySelector("#countryPickerText");
+const countryDialog = document.querySelector("#countryDialog");
+const countryCloseButton = document.querySelector("#countryCloseButton");
 let regionDialogMode = "record";
+
+function getCountryConfig(country = currentCountry) {
+  return COUNTRY_CONFIGS[country] || COUNTRY_CONFIGS.CN;
+}
+
+function getCountryBrands(country = currentCountry) {
+  return [...new Set(getCountryConfig(country).brandGroups.flatMap((group) => group.brands))];
+}
+
+function setCountryState(country) {
+  currentCountry = COUNTRY_CONFIGS[country] ? country : "CN";
+  activeBrandGroups = getCountryConfig(currentCountry).brandGroups;
+  BRANDS = getCountryBrands(currentCountry);
+  activeRegionTree = getCountryConfig(currentCountry).regionTree;
+  REGION_OPTIONS = buildRegionOptions(activeRegionTree);
+}
+
+function getCountrySetting(key, country = currentCountry) {
+  return appSettings?.countries?.[country]?.[key] || getCountryConfig(country).defaultRegion;
+}
+
+function setCountrySetting(key, value, country = currentCountry) {
+  if (!appSettings.countries) appSettings.countries = {};
+  if (!appSettings.countries[country]) appSettings.countries[country] = {};
+  appSettings.countries[country][key] = value;
+}
 
 function loadAppSettings() {
   const fallback = {
-    defaultRegion: "广东省 广州市 天河区",
+    defaultCountry: "CN",
+    countries: {
+      CN: {
+        defaultRegion: COUNTRY_CONFIGS.CN.defaultRegion,
+        recentRegions: [COUNTRY_CONFIGS.CN.defaultRegion],
+      },
+      US: {
+        defaultRegion: COUNTRY_CONFIGS.US.defaultRegion,
+        recentRegions: [COUNTRY_CONFIGS.US.defaultRegion],
+      },
+    },
     showLogos: true,
     buttonSize: "large",
-    recentRegions: ["广东省 广州市 天河区"],
   };
 
   try {
     const saved = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
+    const countries = {
+      ...fallback.countries,
+      ...(saved.countries || {}),
+    };
+    if (saved.defaultRegion && !countries.CN.defaultRegion) countries.CN.defaultRegion = saved.defaultRegion;
+    if (Array.isArray(saved.recentRegions) && saved.recentRegions.length > 0) countries.CN.recentRegions = saved.recentRegions;
+
     return {
       ...fallback,
       ...saved,
-      recentRegions: Array.isArray(saved.recentRegions) && saved.recentRegions.length > 0 ? saved.recentRegions : fallback.recentRegions,
+      defaultCountry: COUNTRY_CONFIGS[saved.defaultCountry] ? saved.defaultCountry : fallback.defaultCountry,
+      countries,
     };
   } catch {
     return fallback;
@@ -491,9 +666,15 @@ function saveAppSettings() {
 }
 
 function rememberRegion(regionName) {
-  if (!regionName || regionName === "全部地区") return;
-  appSettings.recentRegions = [regionName, ...appSettings.recentRegions.filter((item) => item !== regionName)].slice(0, 6);
+  if (!regionName || isAllRegion(regionName)) return;
+  const recentRegions = getCountryRecentRegions();
+  setCountrySetting("recentRegions", [regionName, ...recentRegions.filter((item) => item !== regionName)].slice(0, 6));
   saveAppSettings();
+}
+
+function getCountryRecentRegions(country = currentCountry) {
+  const recent = appSettings?.countries?.[country]?.recentRegions;
+  return Array.isArray(recent) && recent.length > 0 ? recent : [getCountryConfig(country).defaultRegion];
 }
 
 function loadRecords() {
@@ -516,6 +697,7 @@ function normalizeRecordRegion(record) {
 
   return {
     ...record,
+    country: record.country && COUNTRY_CONFIGS[record.country] ? record.country : "CN",
     region: oldRegionMap[record.region] || record.region,
   };
 }
@@ -620,7 +802,11 @@ function isInRange(record, range, periodValue = "") {
 }
 
 function inSelectedRegion(record) {
-  return selectedRegion === "全部地区" || record.region === selectedRegion;
+  return record.country === currentCountry && (isAllRegion(selectedRegion) || record.region === selectedRegion);
+}
+
+function isAllRegion(regionName) {
+  return regionName === "全部地区" || regionName === "全国";
 }
 
 function getRegionParts(regionName) {
@@ -629,6 +815,7 @@ function getRegionParts(regionName) {
 }
 
 function isInRankRegion(record) {
+  if (record.country !== currentCountry) return false;
   if (rankRegionScope === "all") return true;
 
   const recordRegion = getRegionParts(record.region);
@@ -653,8 +840,8 @@ function countRecords({ brand, region = selectedRegion, range = "today" } = {}) 
   selectedRange = range;
   const count = records.filter((record) => {
     const matchesBrand = brand ? record.brand === brand : true;
-    const matchesRegion = region === "全部地区" || record.region === region;
-    return matchesBrand && matchesRegion && inSelectedRange(record);
+    const matchesRegion = isAllRegion(region) || record.region === region;
+    return record.country === currentCountry && matchesBrand && matchesRegion && inSelectedRange(record);
   }).length;
   selectedRange = previousRange;
   return count;
@@ -678,10 +865,11 @@ function getFrequentBrands() {
 }
 
 function addRecord(brand, button) {
-  const recordRegion = selectedRegion === "全部地区" ? lastSpecificRegion : selectedRegion;
+  const recordRegion = isAllRegion(selectedRegion) ? lastSpecificRegion : selectedRegion;
 
   const record = {
     id: crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`,
+    country: currentCountry,
     brand,
     region: recordRegion,
     time: new Date().toISOString(),
@@ -700,8 +888,9 @@ function flashButton(button) {
 }
 
 function undoLastRecord() {
-  const last = records.pop();
-  if (!last) return;
+  const index = records.findLastIndex((record) => record.country === currentCountry);
+  if (index === -1) return;
+  const [last] = records.splice(index, 1);
 
   saveRecords();
   statusText.textContent = `已撤销：${last.brand} · ${last.region}`;
@@ -915,13 +1104,13 @@ function renderBrands() {
     })
   );
 
-    BRAND_GROUPS.forEach((group) => {
+  activeBrandGroups.forEach((group) => {
     brandGrid.append(createBrandGroup(group));
   });
 }
 
 function findBrandGroup(brand) {
-  return BRAND_GROUPS.find((group) => group.brands.includes(brand));
+  return activeBrandGroups.find((group) => group.brands.includes(brand));
 }
 
 function locateBrand() {
@@ -991,8 +1180,9 @@ function renderRanking() {
 }
 
 function populateRankPeriods() {
-  const monthKeys = [...new Set(records.map((record) => getMonthKey(new Date(record.time))))].sort().reverse();
-  const yearKeys = [...new Set(records.map((record) => String(new Date(record.time).getFullYear())))].sort().reverse();
+  const countryRecords = records.filter((record) => record.country === currentCountry);
+  const monthKeys = [...new Set(countryRecords.map((record) => getMonthKey(new Date(record.time))))].sort().reverse();
+  const yearKeys = [...new Set(countryRecords.map((record) => String(new Date(record.time).getFullYear())))].sort().reverse();
   const currentMonth = getMonthKey(new Date());
   const currentYear = String(new Date().getFullYear());
   const months = monthKeys.length > 0 ? monthKeys : [currentMonth];
@@ -1014,7 +1204,7 @@ function getRankRangeLabel() {
 }
 
 function getRankRegionLabel() {
-  if (rankRegionScope === "all") return "全部地区";
+  if (rankRegionScope === "all") return getCountryConfig().allRegionLabel;
 
   const parts = getRegionParts(rankRegionBase);
   if (rankRegionScope === "province") return parts.province;
@@ -1024,6 +1214,18 @@ function getRankRegionLabel() {
 
 function updateRegionButtons() {
   regionPickerText.textContent = formatRegion(lastSpecificRegion);
+}
+
+function updateCountryButtons() {
+  document.querySelectorAll("[data-country]").forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.country === currentCountry);
+  });
+  if (countryPickerText) {
+    const country = getCountryConfig();
+    countryPickerText.textContent = `${country.flag} ${country.name}`;
+  }
+  const allRankScopeButton = document.querySelector('[data-rank-scope="all"]');
+  if (allRankScopeButton) allRankScopeButton.textContent = getCountryConfig().allRegionLabel;
 }
 
 function updateRankButtons() {
@@ -1049,7 +1251,8 @@ function render() {
   currentRegion.textContent = formatRegion(lastSpecificRegion);
   regionPickerText.textContent = formatRegion(lastSpecificRegion);
   todayCount.textContent = countRecords({ range: "today" });
-  undoButton.disabled = records.length === 0;
+  undoButton.disabled = !records.some((record) => record.country === currentCountry);
+  updateCountryButtons();
   updateRegionButtons();
   renderBrands();
   renderRanking();
@@ -1083,6 +1286,34 @@ function showRecordPage() {
   settingsPageButton.classList.remove("is-active");
 }
 
+function switchCountry(country) {
+  if (!COUNTRY_CONFIGS[country]) return;
+  if (country === currentCountry) {
+    closeCountryDialog();
+    return;
+  }
+  setCountryState(country);
+  appSettings.defaultCountry = country;
+  selectedRegion = getCountrySetting("defaultRegion", country);
+  lastSpecificRegion = selectedRegion;
+  rankRegionBase = selectedRegion;
+  rankRegionScope = "district";
+  saveAppSettings();
+  statusText.textContent = `当前国家：${getCountryConfig().name}`;
+  closeCountryDialog();
+  showRecordPage();
+  render();
+}
+
+function openCountryDialog() {
+  countryDialog.hidden = false;
+  updateCountryButtons();
+}
+
+function closeCountryDialog() {
+  countryDialog.hidden = true;
+}
+
 function formatDateTime(value) {
   if (!value) return "无";
   return new Date(value).toLocaleString("zh-CN", {
@@ -1095,10 +1326,11 @@ function formatDateTime(value) {
 }
 
 function getBusiestDay() {
-  if (records.length === 0) return "无";
+  const countryRecords = records.filter((record) => record.country === currentCountry);
+  if (countryRecords.length === 0) return "无";
 
   const totals = new Map();
-  records.forEach((record) => {
+  countryRecords.forEach((record) => {
     const day = new Date(record.time).toLocaleDateString("zh-CN", {
       year: "numeric",
       month: "2-digit",
@@ -1113,16 +1345,19 @@ function getBusiestDay() {
 
 function renderSettings() {
   appVersionText.textContent = APP_VERSION;
-  defaultRegionText.textContent = formatRegion(appSettings.defaultRegion);
+  defaultRegionText.textContent = formatRegion(getCountrySetting("defaultRegion"));
+  countryPickerText.textContent = `${getCountryConfig().flag} ${getCountryConfig().name}`;
   showLogoToggle.checked = appSettings.showLogos;
   buttonSizeSelect.value = appSettings.buttonSize;
 
-  const sortedRecords = [...records].sort((a, b) => new Date(a.time) - new Date(b.time));
+  const countryRecords = records.filter((record) => record.country === currentCountry);
+  const sortedRecords = [...countryRecords].sort((a, b) => new Date(a.time) - new Date(b.time));
   const firstRecord = sortedRecords[0];
   const lastRecord = sortedRecords[sortedRecords.length - 1];
 
   dataStats.innerHTML = `
-    <div><span>总记录数</span><strong>${records.length}</strong></div>
+    <div><span>当前国家</span><strong>${getCountryConfig().name}</strong></div>
+    <div><span>总记录数</span><strong>${countryRecords.length}</strong></div>
     <div><span>最早记录</span><strong>${formatDateTime(firstRecord?.time)}</strong></div>
     <div><span>最后记录</span><strong>${formatDateTime(lastRecord?.time)}</strong></div>
     <div><span>记录最多的日子</span><strong>${getBusiestDay()}</strong></div>
@@ -1131,7 +1366,7 @@ function renderSettings() {
   recentRegionsList.innerHTML = `
     <span class="settings-list-title">最近使用地区</span>
   `;
-  appSettings.recentRegions.forEach((regionName) => {
+  getCountryRecentRegions().forEach((regionName) => {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "recent-region-button";
@@ -1151,8 +1386,9 @@ function renderSettings() {
 function exportBackup() {
   const backup = {
     app: "计车器",
-    version: 1,
+    version: APP_VERSION,
     exportedAt: new Date().toISOString(),
+    settings: appSettings,
     records,
   };
   const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
@@ -1187,13 +1423,30 @@ function importBackup(file) {
         .map((record) =>
           normalizeRecordRegion({
             id: record.id || (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`),
+            country: record.country && COUNTRY_CONFIGS[record.country] ? record.country : "CN",
             brand: String(record.brand),
             region: String(record.region),
             time: new Date(record.time).toISOString(),
           })
         );
 
+      if (backup && typeof backup.settings === "object" && !Array.isArray(backup.settings)) {
+        appSettings = {
+          ...loadAppSettings(),
+          ...backup.settings,
+          countries: {
+            ...loadAppSettings().countries,
+            ...(backup.settings.countries || {}),
+          },
+        };
+        if (!COUNTRY_CONFIGS[appSettings.defaultCountry]) appSettings.defaultCountry = "CN";
+        saveAppSettings();
+      }
+
       saveRecords();
+      setCountryState(appSettings.defaultCountry || "CN");
+      selectedRegion = getCountrySetting("defaultRegion");
+      lastSpecificRegion = selectedRegion;
       statusText.textContent = `已导入 ${records.length} 条记录`;
       render();
     } catch {
@@ -1207,8 +1460,10 @@ function importBackup(file) {
 
 function formatRegion(regionName) {
   if (regionName === "全部地区") return "全部地区";
+  if (regionName === "全国") return "全国";
   const { province, city, district } = getRegionParts(regionName);
   if (province && city && district) {
+    if (province === city && city === district) return province;
     if (city === province || province.endsWith("特别行政区")) return `${province} · ${district}`;
     if (district === city) return `${province} · ${city}`;
   }
@@ -1219,7 +1474,7 @@ function selectSpecificRegion(regionName) {
   if (regionDialogMode === "rank") {
     rankRegionBase = regionName;
   } else if (regionDialogMode === "default") {
-    appSettings.defaultRegion = regionName;
+    setCountrySetting("defaultRegion", regionName);
     rememberRegion(regionName);
     statusText.textContent = `默认地区：${formatRegion(regionName)}`;
   } else {
@@ -1267,6 +1522,10 @@ function chooseProvince(province) {
 
   if (shouldSkipCityStep(province)) {
     selectedCity = province.cities[0];
+    if (isSelfOnlyCity(selectedCity)) {
+      selectSpecificRegion(makeRegionName(province, selectedCity, selectedCity.city));
+      return;
+    }
     regionStep = "district";
     renderRegionList();
     return;
@@ -1295,7 +1554,7 @@ function renderRegionList() {
 
   if (regionStep === "province") {
     regionPathText.textContent = "请选择省级地区";
-    REGION_TREE.forEach((province) => {
+    activeRegionTree.forEach((province) => {
       const button = createRegionOption(province.province, false);
       button.addEventListener("click", () => chooseProvince(province));
       regionList.append(button);
@@ -1552,7 +1811,8 @@ function clearAllData() {
   localStorage.removeItem(`${STORAGE_KEY}.brandOrders`);
   localStorage.removeItem(SETTINGS_KEY);
   appSettings = loadAppSettings();
-  selectedRegion = appSettings.defaultRegion;
+  setCountryState(appSettings.defaultCountry || "CN");
+  selectedRegion = getCountrySetting("defaultRegion");
   lastSpecificRegion = selectedRegion;
   statusText.textContent = "全部本地数据已清空";
   showRecordPage();
@@ -1581,6 +1841,10 @@ document.querySelectorAll("[data-rank-scope]").forEach((button) => {
   });
 });
 
+document.querySelectorAll("[data-country]").forEach((button) => {
+  button.addEventListener("click", () => switchCountry(button.dataset.country));
+});
+
 undoButton.addEventListener("click", undoLastRecord);
 rankPageButton.addEventListener("click", showRankPage);
 settingsPageButton.addEventListener("click", showSettingsPage);
@@ -1594,6 +1858,11 @@ reloadAppButton.addEventListener("click", () => window.location.reload());
 clearDataButton.addEventListener("click", clearAllData);
 resetBrandOrderButton.addEventListener("click", resetBrandOrder);
 defaultRegionButton.addEventListener("click", () => openRegionDialog("default"));
+countryPickerButton.addEventListener("click", openCountryDialog);
+countryCloseButton.addEventListener("click", closeCountryDialog);
+countryDialog.addEventListener("click", (event) => {
+  if (event.target === countryDialog) closeCountryDialog();
+});
 showLogoToggle.addEventListener("change", () => {
   appSettings.showLogos = showLogoToggle.checked;
   saveAppSettings();
