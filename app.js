@@ -959,9 +959,7 @@ function createBrandButton(brand, groupName, canDrag) {
       activeTouchPointers.add(event.pointerId);
       if (activeTouchPointers.size > 1) {
         isMultiTouchGesture = true;
-        clearLongPressTimer();
-        button.classList.remove("is-pressing");
-        longPressPointerId = null;
+        resetLongPressState();
         return;
       }
     }
@@ -1005,8 +1003,8 @@ function createBrandButton(brand, groupName, canDrag) {
     const wasLongPress = longPressTriggered;
     const wasPrimaryPointer = event.pointerId === longPressPointerId;
     dragState = null;
-    longPressTriggered = false;
-    longPressPointerId = null;
+    resetLongPressState();
+    releaseButtonPointer(button, event.pointerId);
     if (wasMultiTouch || wasLongPress || !wasPrimaryPointer) {
       return;
     }
@@ -1020,9 +1018,8 @@ function createBrandButton(brand, groupName, canDrag) {
         isMultiTouchGesture = false;
       }
     }
-    clearLongPressTimer();
-    button.classList.remove("is-pressing");
-    longPressPointerId = null;
+    resetLongPressState();
+    releaseButtonPointer(button, event.pointerId);
     dragState = null;
   });
   button.addEventListener("contextmenu", (event) => event.preventDefault());
@@ -1033,6 +1030,27 @@ function createBrandButton(brand, groupName, canDrag) {
 function clearLongPressTimer() {
   window.clearTimeout(longPressTimer);
   longPressTimer = null;
+}
+
+function resetLongPressState({ resetTouches = false } = {}) {
+  clearLongPressTimer();
+  longPressTriggered = false;
+  longPressPointerId = null;
+  if (resetTouches) {
+    activeTouchPointers.clear();
+    isMultiTouchGesture = false;
+  }
+  document.querySelectorAll(".brand-button.is-pressing").forEach((button) => {
+    button.classList.remove("is-pressing");
+  });
+}
+
+function releaseButtonPointer(button, pointerId) {
+  try {
+    button.releasePointerCapture?.(pointerId);
+  } catch (error) {
+    // Some browsers release capture automatically before pointerup.
+  }
 }
 
 function updateFloatingDrag(event) {
@@ -1664,6 +1682,7 @@ function openBrandMenu(brand, groupName = findBrandGroup(brand)?.name, canSort =
 function closeBrandMenu() {
   activeBrand = null;
   activeBrandGroup = null;
+  resetLongPressState();
   brandMenu.hidden = true;
 }
 
@@ -1902,6 +1921,9 @@ sortSaveButton.addEventListener("click", saveSortDialog);
 brandMenu.addEventListener("click", (event) => {
   if (event.target === brandMenu) closeBrandMenu();
 });
+window.addEventListener("pointerup", () => resetLongPressState());
+window.addEventListener("pointercancel", () => resetLongPressState({ resetTouches: true }));
+window.addEventListener("blur", () => resetLongPressState({ resetTouches: true }));
 sortDialog.addEventListener("click", (event) => {
   if (event.target === sortDialog) stopSortMode();
 });
