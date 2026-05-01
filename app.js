@@ -492,7 +492,7 @@ const COUNTRY_CONFIGS = {
 };
 
 const STORAGE_KEY = "jicheqi.records.v1";
-const APP_VERSION = "1.1.2";
+const APP_VERSION = "1.1.3";
 const SETTINGS_KEY = `${STORAGE_KEY}.settings`;
 const RANGE_LABELS = {
   today: "今日",
@@ -959,7 +959,7 @@ function createBrandButton(brand, groupName, canDrag) {
       activeTouchPointers.add(event.pointerId);
       if (activeTouchPointers.size > 1) {
         isMultiTouchGesture = true;
-        resetLongPressState();
+        resetLongPressState({ resetTouches: true });
         return;
       }
     }
@@ -984,6 +984,7 @@ function createBrandButton(brand, groupName, canDrag) {
       if (moveX > LONG_PRESS_MOVE_LIMIT || moveY > LONG_PRESS_MOVE_LIMIT) {
         clearLongPressTimer();
         button.classList.remove("is-pressing");
+        longPressPointerId = null;
       }
     }
     updateFloatingDrag(event);
@@ -1003,7 +1004,7 @@ function createBrandButton(brand, groupName, canDrag) {
     const wasLongPress = longPressTriggered;
     const wasPrimaryPointer = event.pointerId === longPressPointerId;
     dragState = null;
-    resetLongPressState();
+    resetLongPressState({ resetTouches: true });
     releaseButtonPointer(button, event.pointerId);
     if (wasMultiTouch || wasLongPress || !wasPrimaryPointer) {
       return;
@@ -1018,7 +1019,7 @@ function createBrandButton(brand, groupName, canDrag) {
         isMultiTouchGesture = false;
       }
     }
-    resetLongPressState();
+    resetLongPressState({ resetTouches: true });
     releaseButtonPointer(button, event.pointerId);
     dragState = null;
   });
@@ -1677,12 +1678,13 @@ function openBrandMenu(brand, groupName = findBrandGroup(brand)?.name, canSort =
   menuSortButton.disabled = !canSort || groupName === "常用";
   menuMinusButton.disabled = countRecords({ brand, range: "all" }) === 0;
   brandMenu.hidden = false;
+  resetLongPressState({ resetTouches: true });
 }
 
 function closeBrandMenu() {
   activeBrand = null;
   activeBrandGroup = null;
-  resetLongPressState();
+  resetLongPressState({ resetTouches: true });
   brandMenu.hidden = true;
 }
 
@@ -1921,7 +1923,7 @@ sortSaveButton.addEventListener("click", saveSortDialog);
 brandMenu.addEventListener("click", (event) => {
   if (event.target === brandMenu) closeBrandMenu();
 });
-window.addEventListener("pointerup", () => resetLongPressState());
+window.addEventListener("pointerup", () => resetLongPressState({ resetTouches: true }));
 window.addEventListener("pointercancel", () => resetLongPressState({ resetTouches: true }));
 window.addEventListener("blur", () => resetLongPressState({ resetTouches: true }));
 sortDialog.addEventListener("click", (event) => {
