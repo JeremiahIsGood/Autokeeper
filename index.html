@@ -40,8 +40,16 @@
         <section class="today-bar" aria-live="polite">
           <span>当前地区</span>
           <strong id="currentRegion">广州</strong>
-          <span>今日记录</span>
+          <span id="recordRangeLabel">本日记录</span>
           <strong id="todayCount">0</strong>
+        </section>
+
+        <section class="tabs record-range-tabs" aria-label="记录页统计时段">
+          <button class="tab is-active" type="button" data-range="today">本日</button>
+          <button class="tab" type="button" data-range="week">本周</button>
+          <button class="tab" type="button" data-range="month">本月</button>
+          <button class="tab" type="button" data-range="year">本年</button>
+          <button class="tab" type="button" data-range="all">全部</button>
         </section>
 
         <section class="brand-search" aria-label="品牌搜索">
@@ -107,10 +115,18 @@
             <span>重载页面</span>
             <strong>不清数据</strong>
           </button>
+          <button class="settings-row" id="guideButton" type="button">
+            <span>使用指南</span>
+            <strong>重新查看</strong>
+          </button>
         </section>
 
         <section class="settings-section" aria-label="数据">
           <h3>数据</h3>
+          <button class="settings-row" id="recordQueryButton" type="button">
+            <span>记录查询</span>
+            <strong>近 24 小时</strong>
+          </button>
           <button class="settings-row" id="settingsImportButton" type="button">
             <span>数据导入</span>
             <strong>选择备份</strong>
@@ -138,7 +154,7 @@
             <select id="buttonSizeSelect">
               <option value="large">大</option>
               <option value="medium">中</option>
-              <option value="compact">紧凑</option>
+              <option value="compact">小</option>
             </select>
           </label>
         </section>
@@ -182,8 +198,46 @@
           <h2 id="recordTitle">记录</h2>
           <button class="small-close" id="recordCloseButton" type="button" aria-label="关闭">×</button>
         </div>
+        <div class="record-tools" id="recordTools" hidden>
+          <div class="record-filter-row">
+            <select id="bulkDeleteRange">
+              <option value="today">删除今天</option>
+              <option value="last24">删除近 24 小时</option>
+              <option value="week">删除本周</option>
+              <option value="month">删除本月</option>
+              <option value="all">删除全部</option>
+              <option value="brand">按品牌筛选删除</option>
+            </select>
+            <button class="danger-mini-button" id="bulkDeleteButton" type="button">批量删除</button>
+          </div>
+          <input class="search-input" id="bulkDeleteBrandInput" type="search" placeholder="输入品牌名" hidden>
+        </div>
         <ol class="record-list" id="recordList"></ol>
       </section>
+    </div>
+
+    <div class="modal-backdrop" id="guideDialog" hidden>
+      <section class="modal-sheet guide-sheet" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
+        <div class="modal-head">
+          <h2 id="guideTitle">欢迎使用计车器</h2>
+          <button class="small-close" id="guideSkipButton" type="button" aria-label="跳过">×</button>
+        </div>
+        <div class="guide-content">
+          <strong id="guideStepTitle">快速记录你见到的汽车品牌</strong>
+          <p id="guideStepText">看到一辆车，点一下品牌按钮，计车器会自动保存品牌、时间和地区。</p>
+        </div>
+        <div class="guide-progress" id="guideProgress" aria-label="引导进度"></div>
+        <div class="guide-actions">
+          <button class="text-button muted-button" id="guideBackButton" type="button">上一步</button>
+          <button class="text-button muted-button" id="guideSkipTextButton" type="button">跳过</button>
+          <button class="text-button" id="guideNextButton" type="button">下一步</button>
+        </div>
+      </section>
+    </div>
+
+    <div class="undo-tip" id="undoTip" hidden>
+      <span>记错了？点右上角 ↶ 可以撤销上一次记录。</span>
+      <button id="undoTipCloseButton" type="button">知道了</button>
     </div>
 
     <div class="modal-backdrop" id="sortDialog" hidden>

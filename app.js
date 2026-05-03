@@ -230,58 +230,112 @@ const US_BRAND_GROUPS = [
 ];
 
 const US_STATES = [
-  "Alabama",
-  "Alaska",
-  "Arizona",
-  "Arkansas",
-  "California",
-  "Colorado",
-  "Connecticut",
-  "Delaware",
-  "Florida",
-  "Georgia",
-  "Hawaii",
-  "Idaho",
-  "Illinois",
-  "Indiana",
-  "Iowa",
-  "Kansas",
-  "Kentucky",
-  "Louisiana",
-  "Maine",
-  "Maryland",
-  "Massachusetts",
-  "Michigan",
-  "Minnesota",
-  "Mississippi",
-  "Missouri",
-  "Montana",
-  "Nebraska",
-  "Nevada",
-  "New Hampshire",
-  "New Jersey",
-  "New Mexico",
-  "New York",
-  "North Carolina",
-  "North Dakota",
-  "Ohio",
-  "Oklahoma",
-  "Oregon",
-  "Pennsylvania",
-  "Rhode Island",
-  "South Carolina",
-  "South Dakota",
-  "Tennessee",
-  "Texas",
-  "Utah",
-  "Vermont",
-  "Virginia",
-  "Washington",
-  "West Virginia",
-  "Wisconsin",
-  "Wyoming",
-  "District of Columbia",
+  "亚拉巴马州",
+  "阿拉斯加州",
+  "亚利桑那州",
+  "阿肯色州",
+  "加利福尼亚州",
+  "科罗拉多州",
+  "康涅狄格州",
+  "特拉华州",
+  "佛罗里达州",
+  "佐治亚州",
+  "夏威夷州",
+  "爱达荷州",
+  "伊利诺伊州",
+  "印第安纳州",
+  "艾奥瓦州",
+  "堪萨斯州",
+  "肯塔基州",
+  "路易斯安那州",
+  "缅因州",
+  "马里兰州",
+  "马萨诸塞州",
+  "密歇根州",
+  "明尼苏达州",
+  "密西西比州",
+  "密苏里州",
+  "蒙大拿州",
+  "内布拉斯加州",
+  "内华达州",
+  "新罕布什尔州",
+  "新泽西州",
+  "新墨西哥州",
+  "纽约州",
+  "北卡罗来纳州",
+  "北达科他州",
+  "俄亥俄州",
+  "俄克拉荷马州",
+  "俄勒冈州",
+  "宾夕法尼亚州",
+  "罗得岛州",
+  "南卡罗来纳州",
+  "南达科他州",
+  "田纳西州",
+  "得克萨斯州",
+  "犹他州",
+  "佛蒙特州",
+  "弗吉尼亚州",
+  "华盛顿州",
+  "西弗吉尼亚州",
+  "威斯康星州",
+  "怀俄明州",
+  "哥伦比亚特区",
 ];
+
+const US_STATE_NAME_MAP = {
+  Alabama: "亚拉巴马州",
+  Alaska: "阿拉斯加州",
+  Arizona: "亚利桑那州",
+  Arkansas: "阿肯色州",
+  California: "加利福尼亚州",
+  Colorado: "科罗拉多州",
+  Connecticut: "康涅狄格州",
+  Delaware: "特拉华州",
+  Florida: "佛罗里达州",
+  Georgia: "佐治亚州",
+  Hawaii: "夏威夷州",
+  Idaho: "爱达荷州",
+  Illinois: "伊利诺伊州",
+  Indiana: "印第安纳州",
+  Iowa: "艾奥瓦州",
+  Kansas: "堪萨斯州",
+  Kentucky: "肯塔基州",
+  Louisiana: "路易斯安那州",
+  Maine: "缅因州",
+  Maryland: "马里兰州",
+  Massachusetts: "马萨诸塞州",
+  Michigan: "密歇根州",
+  Minnesota: "明尼苏达州",
+  Mississippi: "密西西比州",
+  Missouri: "密苏里州",
+  Montana: "蒙大拿州",
+  Nebraska: "内布拉斯加州",
+  Nevada: "内华达州",
+  "New Hampshire": "新罕布什尔州",
+  "New Jersey": "新泽西州",
+  "New Mexico": "新墨西哥州",
+  "New York": "纽约州",
+  "North Carolina": "北卡罗来纳州",
+  "North Dakota": "北达科他州",
+  Ohio: "俄亥俄州",
+  Oklahoma: "俄克拉荷马州",
+  Oregon: "俄勒冈州",
+  Pennsylvania: "宾夕法尼亚州",
+  "Rhode Island": "罗得岛州",
+  "South Carolina": "南卡罗来纳州",
+  "South Dakota": "南达科他州",
+  Tennessee: "田纳西州",
+  Texas: "得克萨斯州",
+  Utah: "犹他州",
+  Vermont: "佛蒙特州",
+  Virginia: "弗吉尼亚州",
+  Washington: "华盛顿州",
+  "West Virginia": "西弗吉尼亚州",
+  Wisconsin: "威斯康星州",
+  Wyoming: "怀俄明州",
+  "District of Columbia": "哥伦比亚特区",
+};
 
 const CHINA_REGION_TREE = window.REGION_TREE;
 const US_REGION_TREE = US_STATES.map((state) => ({
@@ -485,17 +539,17 @@ const COUNTRY_CONFIGS = {
     name: "美国",
     flag: "🇺🇸",
     allRegionLabel: "全国",
-    defaultRegion: "California California California",
+    defaultRegion: "加利福尼亚州 加利福尼亚州 加利福尼亚州",
     brandGroups: US_BRAND_GROUPS,
     regionTree: US_REGION_TREE,
   },
 };
 
 const STORAGE_KEY = "jicheqi.records.v1";
-const APP_VERSION = "1.1.3";
+const APP_VERSION = "1.2.1";
 const SETTINGS_KEY = `${STORAGE_KEY}.settings`;
 const RANGE_LABELS = {
-  today: "今日",
+  today: "本日",
   week: "本周",
   month: "本月",
   year: "本年",
@@ -504,7 +558,7 @@ const RANGE_LABELS = {
 
 let appSettings = loadAppSettings();
 setCountryState(appSettings.defaultCountry || "CN");
-let selectedRegion = getCountrySetting("defaultRegion");
+let selectedRegion = getCountrySetting("lastRegion");
 let lastSpecificRegion = selectedRegion;
 let selectedRange = "today";
 let rankRegionBase = selectedRegion;
@@ -546,6 +600,7 @@ const statusText = document.querySelector("#statusText");
 const undoButton = document.querySelector("#undoButton");
 const currentRegion = document.querySelector("#currentRegion");
 const todayCount = document.querySelector("#todayCount");
+const recordRangeLabel = document.querySelector("#recordRangeLabel");
 const importInput = document.querySelector("#importInput");
 const brandSearchInput = document.querySelector("#brandSearchInput");
 const brandSearchButton = document.querySelector("#brandSearchButton");
@@ -565,6 +620,10 @@ const recordDialog = document.querySelector("#recordDialog");
 const recordTitle = document.querySelector("#recordTitle");
 const recordList = document.querySelector("#recordList");
 const recordCloseButton = document.querySelector("#recordCloseButton");
+const recordTools = document.querySelector("#recordTools");
+const bulkDeleteRange = document.querySelector("#bulkDeleteRange");
+const bulkDeleteBrandInput = document.querySelector("#bulkDeleteBrandInput");
+const bulkDeleteButton = document.querySelector("#bulkDeleteButton");
 const sortDialog = document.querySelector("#sortDialog");
 const sortTitle = document.querySelector("#sortTitle");
 const sortList = document.querySelector("#sortList");
@@ -582,6 +641,8 @@ const updateAppButton = document.querySelector("#updateAppButton");
 const updateStatusText = document.querySelector("#updateStatusText");
 const reloadAppButton = document.querySelector("#reloadAppButton");
 const appVersionText = document.querySelector("#appVersionText");
+const guideButton = document.querySelector("#guideButton");
+const recordQueryButton = document.querySelector("#recordQueryButton");
 const settingsImportButton = document.querySelector("#settingsImportButton");
 const settingsExportButton = document.querySelector("#settingsExportButton");
 const clearDataButton = document.querySelector("#clearDataButton");
@@ -596,7 +657,39 @@ const countryPickerButton = document.querySelector("#countryPickerButton");
 const countryPickerText = document.querySelector("#countryPickerText");
 const countryDialog = document.querySelector("#countryDialog");
 const countryCloseButton = document.querySelector("#countryCloseButton");
+const guideDialog = document.querySelector("#guideDialog");
+const guideTitle = document.querySelector("#guideTitle");
+const guideStepTitle = document.querySelector("#guideStepTitle");
+const guideStepText = document.querySelector("#guideStepText");
+const guideProgress = document.querySelector("#guideProgress");
+const guideBackButton = document.querySelector("#guideBackButton");
+const guideNextButton = document.querySelector("#guideNextButton");
+const guideSkipButton = document.querySelector("#guideSkipButton");
+const guideSkipTextButton = document.querySelector("#guideSkipTextButton");
+const undoTip = document.querySelector("#undoTip");
+const undoTipCloseButton = document.querySelector("#undoTipCloseButton");
 let regionDialogMode = "record";
+let activeRecordDialog = { mode: "recent", brand: "" };
+let guideStepIndex = 0;
+
+const GUIDE_STEPS = [
+  {
+    title: "快速记录你见到的汽车品牌",
+    text: "看到一辆车，点一下品牌按钮，计车器会自动保存品牌、时间和地区。",
+  },
+  {
+    title: "先选地区，再开始记录",
+    text: "顶部显示当前地区。切换地区后，后续记录会保存到新地区。",
+  },
+  {
+    title: "点错了也没关系",
+    text: "右上角的 ↶ 可以撤销上一次记录。长按品牌按钮可以查看记录或减一。",
+  },
+  {
+    title: "查看排行和备份数据",
+    text: "排行榜可以按时间和地区统计。设置里可以导入、导出、查询和删除记录。",
+  },
+];
 
 function getCountryConfig(country = currentCountry) {
   return COUNTRY_CONFIGS[country] || COUNTRY_CONFIGS.CN;
@@ -624,21 +717,49 @@ function setCountrySetting(key, value, country = currentCountry) {
   appSettings.countries[country][key] = value;
 }
 
+function normalizeRegionName(regionName) {
+  if (!regionName || typeof regionName !== "string") return regionName;
+  let normalized = regionName;
+  Object.entries(US_STATE_NAME_MAP)
+    .sort((a, b) => b[0].length - a[0].length)
+    .forEach(([englishName, chineseName]) => {
+      normalized = normalized.replaceAll(englishName, chineseName);
+    });
+  return normalized;
+}
+
+function normalizeRecentRegionEntry(entry) {
+  if (typeof entry === "string") {
+    return { name: normalizeRegionName(entry), usedAt: "" };
+  }
+  if (entry && typeof entry === "object" && typeof entry.name === "string") {
+    return {
+      name: normalizeRegionName(entry.name),
+      usedAt: entry.usedAt || "",
+    };
+  }
+  return null;
+}
+
 function loadAppSettings() {
   const fallback = {
     defaultCountry: "CN",
     countries: {
       CN: {
         defaultRegion: COUNTRY_CONFIGS.CN.defaultRegion,
-        recentRegions: [COUNTRY_CONFIGS.CN.defaultRegion],
+        lastRegion: COUNTRY_CONFIGS.CN.defaultRegion,
+        recentRegions: [{ name: COUNTRY_CONFIGS.CN.defaultRegion, usedAt: "" }],
       },
       US: {
         defaultRegion: COUNTRY_CONFIGS.US.defaultRegion,
-        recentRegions: [COUNTRY_CONFIGS.US.defaultRegion],
+        lastRegion: COUNTRY_CONFIGS.US.defaultRegion,
+        recentRegions: [{ name: COUNTRY_CONFIGS.US.defaultRegion, usedAt: "" }],
       },
     },
     showLogos: true,
     buttonSize: "large",
+    guideSeen: false,
+    undoTipSeen: false,
   };
 
   try {
@@ -649,6 +770,18 @@ function loadAppSettings() {
     };
     if (saved.defaultRegion && !countries.CN.defaultRegion) countries.CN.defaultRegion = saved.defaultRegion;
     if (Array.isArray(saved.recentRegions) && saved.recentRegions.length > 0) countries.CN.recentRegions = saved.recentRegions;
+    Object.keys(countries).forEach((country) => {
+      const config = COUNTRY_CONFIGS[country] || COUNTRY_CONFIGS.CN;
+      countries[country] = {
+        ...fallback.countries[country],
+        ...countries[country],
+      };
+      countries[country].defaultRegion = normalizeRegionName(countries[country].defaultRegion || config.defaultRegion);
+      countries[country].lastRegion = normalizeRegionName(countries[country].lastRegion || countries[country].defaultRegion || config.defaultRegion);
+      const recent = Array.isArray(countries[country].recentRegions) ? countries[country].recentRegions : [];
+      const normalizedRecent = recent.map(normalizeRecentRegionEntry).filter(Boolean);
+      countries[country].recentRegions = normalizedRecent.length > 0 ? normalizedRecent.slice(0, 5) : [{ name: countries[country].lastRegion, usedAt: "" }];
+    });
 
     return {
       ...fallback,
@@ -667,14 +800,29 @@ function saveAppSettings() {
 
 function rememberRegion(regionName) {
   if (!regionName || isAllRegion(regionName)) return;
+  const normalizedRegion = normalizeRegionName(regionName);
   const recentRegions = getCountryRecentRegions();
-  setCountrySetting("recentRegions", [regionName, ...recentRegions.filter((item) => item !== regionName)].slice(0, 6));
+  setCountrySetting(
+    "recentRegions",
+    [
+      { name: normalizedRegion, usedAt: new Date().toISOString() },
+      ...recentRegions.filter((item) => item.name !== normalizedRegion),
+    ].slice(0, 5)
+  );
   saveAppSettings();
+}
+
+function rememberLastRegion(regionName) {
+  if (!regionName || isAllRegion(regionName)) return;
+  const normalizedRegion = normalizeRegionName(regionName);
+  setCountrySetting("lastRegion", normalizedRegion);
+  rememberRegion(normalizedRegion);
 }
 
 function getCountryRecentRegions(country = currentCountry) {
   const recent = appSettings?.countries?.[country]?.recentRegions;
-  return Array.isArray(recent) && recent.length > 0 ? recent : [getCountryConfig(country).defaultRegion];
+  const normalized = Array.isArray(recent) ? recent.map(normalizeRecentRegionEntry).filter(Boolean) : [];
+  return normalized.length > 0 ? normalized.slice(0, 5) : [{ name: getCountryConfig(country).defaultRegion, usedAt: "" }];
 }
 
 function loadRecords() {
@@ -698,7 +846,7 @@ function normalizeRecordRegion(record) {
   return {
     ...record,
     country: record.country && COUNTRY_CONFIGS[record.country] ? record.country : "CN",
-    region: oldRegionMap[record.region] || record.region,
+    region: normalizeRegionName(oldRegionMap[record.region] || record.region),
   };
 }
 
@@ -784,6 +932,10 @@ function isInRange(record, range, periodValue = "") {
     return recordDate >= startOfDay(now);
   }
 
+  if (range === "last24") {
+    return now - recordDate <= 24 * 60 * 60 * 1000;
+  }
+
   if (range === "week") {
     return recordDate >= startOfWeek(now);
   }
@@ -850,7 +1002,7 @@ function countRecords({ brand, region = selectedRegion, range = "today" } = {}) 
 function countRecentBrand(brand) {
   const recentStart = startOfLastSevenDays();
   return records.filter((record) => {
-    return record.brand === brand && inSelectedRegion(record) && new Date(record.time) >= recentStart;
+    return record.country === currentCountry && record.brand === brand && inSelectedRegion(record) && new Date(record.time) >= recentStart;
   }).length;
 }
 
@@ -859,6 +1011,7 @@ function getFrequentBrands() {
     brand,
     count: countRecentBrand(brand),
   }))
+    .filter((item) => item.count > 0)
     .sort((a, b) => b.count - a.count || BRANDS.indexOf(a.brand) - BRANDS.indexOf(b.brand))
     .slice(0, 9)
     .map((item) => item.brand);
@@ -866,6 +1019,7 @@ function getFrequentBrands() {
 
 function addRecord(brand, button) {
   const recordRegion = isAllRegion(selectedRegion) ? lastSpecificRegion : selectedRegion;
+  const shouldShowUndoTip = !appSettings.undoTipSeen;
 
   const record = {
     id: crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`,
@@ -880,6 +1034,11 @@ function addRecord(brand, button) {
   statusText.textContent = `已记录：${brand} · ${formatRegion(recordRegion)}`;
   flashButton(button);
   render();
+  if (shouldShowUndoTip) {
+    appSettings.undoTipSeen = true;
+    saveAppSettings();
+    showUndoTip();
+  }
 }
 
 function flashButton(button) {
@@ -951,7 +1110,7 @@ function createBrandButton(brand, groupName, canDrag) {
   button.innerHTML = `
     ${logo ? `<span class="brand-logo-wrap"><img class="brand-logo" src="${logo}" alt="${brand}车标"></span>` : ""}
     <span class="brand-name">${brand}</span>
-    <span class="brand-count">${countRecords({ brand, range: "today" })}</span>
+    <span class="brand-count">${countRecords({ brand, range: selectedRange })}</span>
   `;
 
   button.addEventListener("pointerdown", (event) => {
@@ -1189,9 +1348,13 @@ function renderRanking() {
   visible.forEach((item, index) => {
     const row = document.createElement("li");
     row.className = "rank-item";
+    const logo = appSettings.showLogos ? BRAND_LOGOS[item.brand] : "";
     row.innerHTML = `
       <span class="rank-number">${index + 1}</span>
-      <span class="rank-name">${item.brand}</span>
+      <span class="rank-brand">
+        ${logo ? `<span class="rank-logo-wrap"><img class="rank-logo" src="${logo}" alt="${item.brand}车标"></span>` : ""}
+        <span class="rank-name">${item.brand}</span>
+      </span>
       <span class="rank-count">${item.count}</span>
     `;
     rankList.append(row);
@@ -1269,10 +1432,12 @@ function render() {
   document.body.dataset.buttonSize = appSettings.buttonSize;
   currentRegion.textContent = formatRegion(lastSpecificRegion);
   regionPickerText.textContent = formatRegion(lastSpecificRegion);
-  todayCount.textContent = countRecords({ range: "today" });
+  recordRangeLabel.textContent = `${RANGE_LABELS[selectedRange] || "本日"}记录`;
+  todayCount.textContent = countRecords({ range: selectedRange });
   undoButton.disabled = !records.some((record) => record.country === currentCountry);
   updateCountryButtons();
   updateRegionButtons();
+  updateRangeButtons();
   renderBrands();
   renderRanking();
   renderSettings();
@@ -1313,7 +1478,7 @@ function switchCountry(country) {
   }
   setCountryState(country);
   appSettings.defaultCountry = country;
-  selectedRegion = getCountrySetting("defaultRegion", country);
+  selectedRegion = getCountrySetting("lastRegion", country);
   lastSpecificRegion = selectedRegion;
   rankRegionBase = selectedRegion;
   rankRegionScope = "district";
@@ -1385,21 +1550,75 @@ function renderSettings() {
   recentRegionsList.innerHTML = `
     <span class="settings-list-title">最近使用地区</span>
   `;
-  getCountryRecentRegions().forEach((regionName) => {
+  getCountryRecentRegions().forEach((region) => {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "recent-region-button";
-    button.textContent = formatRegion(regionName);
+    const timeText = region.usedAt ? formatDateTime(region.usedAt) : "未记录时间";
+    button.innerHTML = `
+      <span>${formatRegion(region.name)}</span>
+      <strong>${timeText}</strong>
+    `;
     button.addEventListener("click", () => {
-      selectedRegion = regionName;
-      lastSpecificRegion = regionName;
-      rememberRegion(regionName);
-      statusText.textContent = `当前地区：${formatRegion(regionName)}`;
+      selectedRegion = region.name;
+      lastSpecificRegion = region.name;
+      rememberLastRegion(region.name);
+      statusText.textContent = `当前地区：${formatRegion(region.name)}`;
       showRecordPage();
       render();
     });
     recentRegionsList.append(button);
   });
+}
+
+function renderGuideStep() {
+  const step = GUIDE_STEPS[guideStepIndex];
+  guideTitle.textContent = "欢迎使用计车器";
+  guideStepTitle.textContent = step.title;
+  guideStepText.textContent = step.text;
+  guideBackButton.disabled = guideStepIndex === 0;
+  guideNextButton.textContent = guideStepIndex === GUIDE_STEPS.length - 1 ? "开始使用" : "下一步";
+  guideProgress.innerHTML = GUIDE_STEPS.map((_, index) => {
+    return `<span class="${index === guideStepIndex ? "is-active" : ""}"></span>`;
+  }).join("");
+}
+
+function openGuide({ force = false } = {}) {
+  if (!force && appSettings.guideSeen) return;
+  guideStepIndex = 0;
+  renderGuideStep();
+  guideDialog.hidden = false;
+}
+
+function closeGuide({ markSeen = true } = {}) {
+  if (markSeen) {
+    appSettings.guideSeen = true;
+    saveAppSettings();
+  }
+  guideDialog.hidden = true;
+}
+
+function goNextGuideStep() {
+  if (guideStepIndex >= GUIDE_STEPS.length - 1) {
+    closeGuide();
+    return;
+  }
+  guideStepIndex += 1;
+  renderGuideStep();
+}
+
+function goBackGuideStep() {
+  if (guideStepIndex === 0) return;
+  guideStepIndex -= 1;
+  renderGuideStep();
+}
+
+function showUndoTip() {
+  undoTip.hidden = false;
+}
+
+function closeUndoTip() {
+  undoTip.hidden = true;
 }
 
 function exportBackup() {
@@ -1460,11 +1679,12 @@ function importBackup(file) {
         };
         if (!COUNTRY_CONFIGS[appSettings.defaultCountry]) appSettings.defaultCountry = "CN";
         saveAppSettings();
+        appSettings = loadAppSettings();
       }
 
       saveRecords();
       setCountryState(appSettings.defaultCountry || "CN");
-      selectedRegion = getCountrySetting("defaultRegion");
+      selectedRegion = getCountrySetting("lastRegion");
       lastSpecificRegion = selectedRegion;
       statusText.textContent = `已导入 ${records.length} 条记录`;
       render();
@@ -1499,7 +1719,7 @@ function selectSpecificRegion(regionName) {
   } else {
     selectedRegion = regionName;
     lastSpecificRegion = regionName;
-    rememberRegion(regionName);
+    rememberLastRegion(regionName);
     statusText.textContent = `当前地区：${formatRegion(regionName)}`;
   }
   closeRegionDialog();
@@ -1510,9 +1730,8 @@ function openRegionDialog(mode = "record") {
   regionDialogMode = mode;
   regionDialog.hidden = false;
   regionSearchInput.value = "";
-  regionStep = "province";
-  selectedProvince = null;
-  selectedCity = null;
+  const baseRegion = mode === "rank" ? rankRegionBase : mode === "default" ? getCountrySetting("defaultRegion") : lastSpecificRegion;
+  primeRegionDialog(baseRegion);
   renderRegionList();
   renderRegionSearch();
 }
@@ -1533,6 +1752,35 @@ function isSelfOnlyCity(city) {
 
 function makeRegionName(province, city, district) {
   return `${province.province} ${city.city} ${district}`;
+}
+
+function findRegionLocation(regionName) {
+  const parts = getRegionParts(regionName);
+  const province = activeRegionTree.find((item) => item.province === parts.province);
+  if (!province) return null;
+  const city = province.cities.find((item) => item.city === parts.city) || province.cities[0];
+  if (!city) return { province, city: null };
+  return { province, city };
+}
+
+function primeRegionDialog(regionName) {
+  regionStep = "province";
+  selectedProvince = null;
+  selectedCity = null;
+
+  const location = findRegionLocation(regionName);
+  if (!location?.province || !location.city) return;
+
+  selectedProvince = location.province;
+  selectedCity = location.city;
+
+  if (isSelfOnlyCity(selectedCity)) {
+    selectedCity = null;
+    regionStep = shouldSkipCityStep(selectedProvince) ? "province" : "city";
+    return;
+  }
+
+  regionStep = "district";
 }
 
 function chooseProvince(province) {
@@ -1753,9 +2001,33 @@ function getBrandRecords(brand) {
     .sort((a, b) => new Date(b.time) - new Date(a.time));
 }
 
+function getRecentRecords() {
+  return records
+    .filter((record) => record.country === currentCountry && isInRange(record, "last24"))
+    .sort((a, b) => new Date(b.time) - new Date(a.time));
+}
+
 function openRecordDialog(brand) {
-  const list = getBrandRecords(brand);
-  recordTitle.textContent = `${brand}记录`;
+  activeRecordDialog = { mode: "brand", brand };
+  renderRecordDialog();
+}
+
+function openRecentRecordDialog() {
+  activeRecordDialog = { mode: "recent", brand: "" };
+  showRecordPage();
+  renderRecordDialog();
+}
+
+function getActiveRecordList() {
+  if (activeRecordDialog.mode === "brand") return getBrandRecords(activeRecordDialog.brand);
+  return getRecentRecords();
+}
+
+function renderRecordDialog() {
+  const list = getActiveRecordList();
+  recordTools.hidden = activeRecordDialog.mode !== "recent";
+  bulkDeleteBrandInput.hidden = bulkDeleteRange.value !== "brand";
+  recordTitle.textContent = activeRecordDialog.mode === "brand" ? `${activeRecordDialog.brand}记录` : "近 24 小时记录";
   recordList.innerHTML = "";
 
   if (list.length === 0) {
@@ -1768,21 +2040,73 @@ function openRecordDialog(brand) {
       const item = document.createElement("li");
       item.className = "record-item";
       const time = new Date(record.time).toLocaleString("zh-CN", {
+        year: "numeric",
         month: "2-digit",
         day: "2-digit",
         hour: "2-digit",
         minute: "2-digit",
       });
       item.innerHTML = `
-        <span>${record.region}</span>
-        <strong>${time}</strong>
+        <span>
+          <strong>${record.brand}</strong>
+          <em>${formatRegion(record.region)}</em>
+        </span>
+        <time>${time}</time>
+        <button class="record-delete-button" type="button" aria-label="删除这条记录" title="删除">🗑</button>
       `;
+      item.querySelector(".record-delete-button").addEventListener("click", () => deleteRecord(record.id));
       recordList.append(item);
     });
   }
 
   closeBrandMenu();
   recordDialog.hidden = false;
+}
+
+function deleteRecord(recordId) {
+  const record = records.find((item) => item.id === recordId);
+  if (!record) return;
+  if (!window.confirm(`删除这条${record.brand}记录吗？`)) return;
+  records = records.filter((item) => item.id !== recordId);
+  saveRecords();
+  statusText.textContent = `已删除：${record.brand}`;
+  renderRecordDialog();
+  render();
+}
+
+function getBulkDeleteRecords() {
+  const range = bulkDeleteRange.value;
+  const keyword = bulkDeleteBrandInput.value.trim();
+  return records.filter((record) => {
+    if (record.country !== currentCountry) return false;
+    if (range === "brand") {
+      if (!keyword) return false;
+      return record.brand.includes(keyword) || keyword.includes(record.brand);
+    }
+    return isInRange(record, range);
+  });
+}
+
+function bulkDeleteRecords() {
+  const range = bulkDeleteRange.value;
+  const matched = getBulkDeleteRecords();
+  if (range === "brand" && !bulkDeleteBrandInput.value.trim()) {
+    statusText.textContent = "请输入要删除的品牌";
+    return;
+  }
+  if (matched.length === 0) {
+    statusText.textContent = "没有符合条件的记录";
+    return;
+  }
+  const label = range === "brand" ? `品牌包含“${bulkDeleteBrandInput.value.trim()}”` : bulkDeleteRange.selectedOptions[0].textContent.replace("删除", "");
+  if (!window.confirm(`将删除${label}的 ${matched.length} 条记录。确定继续吗？`)) return;
+  if (!window.confirm("请再次确认：这些记录删除后无法恢复，真的删除吗？")) return;
+  const ids = new Set(matched.map((record) => record.id));
+  records = records.filter((record) => !ids.has(record.id));
+  saveRecords();
+  statusText.textContent = `已删除 ${matched.length} 条记录`;
+  renderRecordDialog();
+  render();
 }
 
 function closeRecordDialog() {
@@ -1833,7 +2157,7 @@ function clearAllData() {
   localStorage.removeItem(SETTINGS_KEY);
   appSettings = loadAppSettings();
   setCountryState(appSettings.defaultCountry || "CN");
-  selectedRegion = getCountrySetting("defaultRegion");
+  selectedRegion = getCountrySetting("lastRegion");
   lastSpecificRegion = selectedRegion;
   statusText.textContent = "全部本地数据已清空";
   showRecordPage();
@@ -1862,6 +2186,13 @@ document.querySelectorAll("[data-rank-scope]").forEach((button) => {
   });
 });
 
+document.querySelectorAll("[data-range]").forEach((button) => {
+  button.addEventListener("click", () => {
+    selectedRange = button.dataset.range;
+    render();
+  });
+});
+
 document.querySelectorAll("[data-country]").forEach((button) => {
   button.addEventListener("click", () => switchCountry(button.dataset.country));
 });
@@ -1873,11 +2204,13 @@ backToRecordButton.addEventListener("click", showRecordPage);
 backFromSettingsButton.addEventListener("click", showRecordPage);
 settingsExportButton.addEventListener("click", exportBackup);
 settingsImportButton.addEventListener("click", () => importInput.click());
+recordQueryButton.addEventListener("click", openRecentRecordDialog);
 importInput.addEventListener("change", () => importBackup(importInput.files[0]));
 updateAppButton.addEventListener("click", updateApp);
 reloadAppButton.addEventListener("click", () => window.location.reload());
 clearDataButton.addEventListener("click", clearAllData);
 resetBrandOrderButton.addEventListener("click", resetBrandOrder);
+guideButton.addEventListener("click", () => openGuide({ force: true }));
 defaultRegionButton.addEventListener("click", () => openRegionDialog("default"));
 countryPickerButton.addEventListener("click", openCountryDialog);
 countryCloseButton.addEventListener("click", closeCountryDialog);
@@ -1930,9 +2263,21 @@ sortDialog.addEventListener("click", (event) => {
   if (event.target === sortDialog) stopSortMode();
 });
 recordCloseButton.addEventListener("click", closeRecordDialog);
+bulkDeleteRange.addEventListener("change", () => {
+  bulkDeleteBrandInput.hidden = bulkDeleteRange.value !== "brand";
+});
+bulkDeleteButton.addEventListener("click", bulkDeleteRecords);
 recordDialog.addEventListener("click", (event) => {
   if (event.target === recordDialog) closeRecordDialog();
 });
+guideBackButton.addEventListener("click", goBackGuideStep);
+guideNextButton.addEventListener("click", goNextGuideStep);
+guideSkipButton.addEventListener("click", () => closeGuide());
+guideSkipTextButton.addEventListener("click", () => closeGuide());
+guideDialog.addEventListener("click", (event) => {
+  if (event.target === guideDialog) closeGuide();
+});
+undoTipCloseButton.addEventListener("click", closeUndoTip);
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -1941,3 +2286,4 @@ if ("serviceWorker" in navigator) {
 }
 
 render();
+openGuide();
