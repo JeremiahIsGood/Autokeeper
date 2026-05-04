@@ -58,6 +58,7 @@ const BRAND_GROUPS = [
       "瑞麒",
       "东风",
       "东风风光",
+      "睿蓝",
       "iCar",
       "极越",
       "江淮",
@@ -547,7 +548,7 @@ const COUNTRY_CONFIGS = {
 };
 
 const STORAGE_KEY = "jicheqi.records.v1";
-const APP_VERSION = "1.2.7";
+const APP_VERSION = "1.2.8";
 const SETTINGS_KEY = `${STORAGE_KEY}.settings`;
 const RANGE_LABELS = {
   today: "本日",
