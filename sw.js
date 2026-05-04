@@ -1,4 +1,4 @@
-const CACHE_NAME = "jicheqi-v47";
+const CACHE_NAME = "jicheqi-v48";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -11,7 +11,6 @@ const APP_FILES = [
   "./logos/logo-001.png",
   "./logos/logo-002.png",
   "./logos/logo-003.png",
-  "./logos/logo-004.png",
   "./logos/logo-005.png",
   "./logos/logo-006.png",
   "./logos/logo-007.png",

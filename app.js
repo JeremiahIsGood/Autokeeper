@@ -56,7 +56,6 @@ const BRAND_GROUPS = [
       "大通",
       "国金",
       "瑞麒",
-      "一汽",
       "东风",
       "东风风光",
       "iCar",
@@ -370,7 +369,6 @@ const BRAND_LOGOS = {
   "DS": "logos/logo-001.png",
   "iCar": "logos/logo-002.png",
   "LEVC": "logos/logo-003.png",
-  "一汽": "logos/logo-004.png",
   "三菱": "logos/logo-005.png",
   "世极": "logos/logo-006.png",
   "东南": "logos/logo-007.png",
@@ -549,7 +547,7 @@ const COUNTRY_CONFIGS = {
 };
 
 const STORAGE_KEY = "jicheqi.records.v1";
-const APP_VERSION = "1.2.6";
+const APP_VERSION = "1.2.7";
 const SETTINGS_KEY = `${STORAGE_KEY}.settings`;
 const RANGE_LABELS = {
   today: "本日",
