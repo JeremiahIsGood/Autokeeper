@@ -568,7 +568,8 @@ body[data-button-size="compact"] .brand-name {
   accent-color: var(--accent);
 }
 
-.select-row select {
+.select-row select,
+.select-row input {
   min-height: 36px;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -576,6 +577,12 @@ body[data-button-size="compact"] .brand-name {
   color: var(--text);
   font: inherit;
   font-weight: 800;
+}
+
+.select-row input {
+  width: 88px;
+  padding: 0 10px;
+  text-align: right;
 }
 
 .settings-stats,
@@ -955,7 +962,7 @@ h2 {
 .record-item {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto 42px;
-  align-items: center;
+  align-items: start;
   gap: 12px;
   min-height: 48px;
   padding: 10px 12px;
@@ -967,9 +974,10 @@ h2 {
 .record-item span {
   display: grid;
   min-width: 0;
-  gap: 3px;
+  gap: 4px;
   color: var(--accent-dark);
   font-weight: 900;
+  line-height: 1.35;
 }
 
 .record-item strong {
@@ -978,10 +986,12 @@ h2 {
 }
 
 .record-item em {
+  display: block;
   min-width: 0;
   color: var(--muted);
   font-size: 14px;
   font-style: normal;
+  line-height: 1.35;
   overflow-wrap: anywhere;
 }
 

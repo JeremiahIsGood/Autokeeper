@@ -46,7 +46,7 @@
 
         <section class="tabs record-range-tabs" aria-label="记录页统计时段">
           <button class="tab is-active" type="button" data-range="today">本日</button>
-          <button class="tab" type="button" data-range="week">本周</button>
+          <button class="tab" type="button" data-range="week">近七天</button>
           <button class="tab" type="button" data-range="month">本月</button>
           <button class="tab" type="button" data-range="year">本年</button>
           <button class="tab" type="button" data-range="all">全部</button>
@@ -79,7 +79,7 @@
           </div>
           <div class="tabs rank-tabs" aria-label="统计范围">
             <button class="tab is-active" type="button" data-rank-range="today">今日</button>
-            <button class="tab" type="button" data-rank-range="week">本周</button>
+            <button class="tab" type="button" data-rank-range="week">近七天</button>
             <button class="tab" type="button" data-rank-range="month">月份</button>
             <button class="tab" type="button" data-rank-range="year">年份</button>
             <button class="tab" type="button" data-rank-range="all">全部</button>
@@ -125,7 +125,7 @@
           <h3>数据</h3>
           <button class="settings-row" id="recordQueryButton" type="button">
             <span>记录查询</span>
-            <strong>近 24 小时</strong>
+            <strong>近七天</strong>
           </button>
           <button class="settings-row" id="settingsImportButton" type="button">
             <span>数据导入</span>
@@ -161,6 +161,14 @@
 
         <section class="settings-section" aria-label="品牌">
           <h3>品牌</h3>
+          <label class="settings-row switch-row">
+            <span>显示常用分组</span>
+            <input id="showFrequentToggle" type="checkbox">
+          </label>
+          <label class="settings-row select-row">
+            <span>常用品牌数量</span>
+            <input id="frequentLimitInput" type="number" min="3" max="20" step="1" inputmode="numeric">
+          </label>
           <button class="settings-row" id="resetBrandOrderButton" type="button">
             <span>重置品牌排序</span>
             <strong>恢复默认</strong>
@@ -203,7 +211,7 @@
             <select id="bulkDeleteRange">
               <option value="today">删除今天</option>
               <option value="last24">删除近 24 小时</option>
-              <option value="week">删除本周</option>
+              <option value="week">删除近七天</option>
               <option value="month">删除本月</option>
               <option value="all">删除全部</option>
               <option value="brand">按品牌筛选删除</option>

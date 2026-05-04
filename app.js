@@ -546,11 +546,11 @@ const COUNTRY_CONFIGS = {
 };
 
 const STORAGE_KEY = "jicheqi.records.v1";
-const APP_VERSION = "1.2.1";
+const APP_VERSION = "1.2.5";
 const SETTINGS_KEY = `${STORAGE_KEY}.settings`;
 const RANGE_LABELS = {
   today: "本日",
-  week: "本周",
+  week: "近七天",
   month: "本月",
   year: "本年",
   all: "全部",
@@ -649,6 +649,8 @@ const clearDataButton = document.querySelector("#clearDataButton");
 const dataStats = document.querySelector("#dataStats");
 const showLogoToggle = document.querySelector("#showLogoToggle");
 const buttonSizeSelect = document.querySelector("#buttonSizeSelect");
+const showFrequentToggle = document.querySelector("#showFrequentToggle");
+const frequentLimitInput = document.querySelector("#frequentLimitInput");
 const resetBrandOrderButton = document.querySelector("#resetBrandOrderButton");
 const defaultRegionButton = document.querySelector("#defaultRegionButton");
 const defaultRegionText = document.querySelector("#defaultRegionText");
@@ -758,6 +760,8 @@ function loadAppSettings() {
     },
     showLogos: true,
     buttonSize: "large",
+    showFrequentGroup: true,
+    frequentLimit: 9,
     guideSeen: false,
     undoTipSeen: false,
   };
@@ -876,6 +880,11 @@ function saveCollapsedGroups() {
   localStorage.setItem(`${STORAGE_KEY}.collapsedGroups`, JSON.stringify(collapsedGroups));
 }
 
+function getFrequentLimit() {
+  const limit = Number(appSettings.frequentLimit) || 9;
+  return Math.min(20, Math.max(3, Math.round(limit)));
+}
+
 function saveBrandOrders() {
   localStorage.setItem(`${STORAGE_KEY}.brandOrders`, JSON.stringify(brandOrders));
 }
@@ -908,7 +917,7 @@ function inSelectedRange(record) {
   }
 
   if (selectedRange === "week") {
-    return recordDate >= startOfWeek(now);
+    return recordDate >= startOfLastSevenDays();
   }
 
   if (selectedRange === "month") {
@@ -937,7 +946,7 @@ function isInRange(record, range, periodValue = "") {
   }
 
   if (range === "week") {
-    return recordDate >= startOfWeek(now);
+    return recordDate >= startOfLastSevenDays();
   }
 
   if (range === "month") {
@@ -1013,7 +1022,7 @@ function getFrequentBrands() {
   }))
     .filter((item) => item.count > 0)
     .sort((a, b) => b.count - a.count || BRANDS.indexOf(a.brand) - BRANDS.indexOf(b.brand))
-    .slice(0, 9)
+    .slice(0, getFrequentLimit())
     .map((item) => item.brand);
 }
 
@@ -1272,15 +1281,17 @@ function createBrandGroup({ name, brands, note, canDrag = true }) {
 function renderBrands() {
   brandGrid.innerHTML = "";
 
-  const frequentBrands = getFrequentBrands();
-  brandGrid.append(
-    createBrandGroup({
-      name: "常用",
-      brands: frequentBrands,
-      note: "近 7 天前 9",
-      canDrag: false,
-    })
-  );
+  if (appSettings.showFrequentGroup) {
+    const frequentBrands = getFrequentBrands();
+    brandGrid.append(
+      createBrandGroup({
+        name: "常用",
+        brands: frequentBrands,
+        note: `近七天最多 ${getFrequentLimit()}`,
+        canDrag: false,
+      })
+    );
+  }
 
   activeBrandGroups.forEach((group) => {
     brandGrid.append(createBrandGroup(group));
@@ -1533,6 +1544,8 @@ function renderSettings() {
   countryPickerText.textContent = `${getCountryConfig().flag} ${getCountryConfig().name}`;
   showLogoToggle.checked = appSettings.showLogos;
   buttonSizeSelect.value = appSettings.buttonSize;
+  showFrequentToggle.checked = appSettings.showFrequentGroup;
+  frequentLimitInput.value = String(getFrequentLimit());
 
   const countryRecords = records.filter((record) => record.country === currentCountry);
   const sortedRecords = [...countryRecords].sort((a, b) => new Date(a.time) - new Date(b.time));
@@ -2003,7 +2016,7 @@ function getBrandRecords(brand) {
 
 function getRecentRecords() {
   return records
-    .filter((record) => record.country === currentCountry && isInRange(record, "last24"))
+    .filter((record) => record.country === currentCountry && isInRange(record, "week"))
     .sort((a, b) => new Date(b.time) - new Date(a.time));
 }
 
@@ -2027,7 +2040,7 @@ function renderRecordDialog() {
   const list = getActiveRecordList();
   recordTools.hidden = activeRecordDialog.mode !== "recent";
   bulkDeleteBrandInput.hidden = bulkDeleteRange.value !== "brand";
-  recordTitle.textContent = activeRecordDialog.mode === "brand" ? `${activeRecordDialog.brand}记录` : "近 24 小时记录";
+  recordTitle.textContent = activeRecordDialog.mode === "brand" ? `${activeRecordDialog.brand}记录` : "近七天记录";
   recordList.innerHTML = "";
 
   if (list.length === 0) {
@@ -2113,34 +2126,83 @@ function closeRecordDialog() {
   recordDialog.hidden = true;
 }
 
+function withTimeout(promise, ms, message = "timeout") {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => window.setTimeout(() => reject(new Error(message)), ms)),
+  ]);
+}
+
+function waitForWorkerInstalled(worker, ms = 3500) {
+  if (!worker) return Promise.resolve(null);
+  if (worker.state === "installed" || worker.state === "activated") return Promise.resolve(worker);
+
+  return withTimeout(
+    new Promise((resolve) => {
+      worker.addEventListener("statechange", () => {
+        if (worker.state === "installed" || worker.state === "activated") {
+          resolve(worker);
+        }
+      });
+    }),
+    ms,
+    "worker-install-timeout"
+  ).catch(() => null);
+}
+
+async function activateWaitingWorker(worker) {
+  if (!worker) return false;
+  worker.postMessage({ type: "SKIP_WAITING" });
+  await withTimeout(
+    new Promise((resolve) => {
+      navigator.serviceWorker.addEventListener("controllerchange", resolve, { once: true });
+    }),
+    2500,
+    "controllerchange-timeout"
+  ).catch(() => {});
+  window.location.reload();
+  return true;
+}
+
 async function updateApp() {
+  if (updateAppButton.disabled) return;
+  updateAppButton.disabled = true;
   updateStatusText.textContent = "正在检查更新";
 
   if (!("serviceWorker" in navigator)) {
     updateStatusText.textContent = "当前浏览器不支持";
+    updateAppButton.disabled = false;
     return;
   }
 
   try {
-    const registration = await navigator.serviceWorker.getRegistration();
+    let registration = await navigator.serviceWorker.getRegistration();
     if (!registration) {
-      updateStatusText.textContent = "未发现缓存";
-      return;
+      registration = await withTimeout(navigator.serviceWorker.register("sw.js"), 4500, "register-timeout");
     }
 
-    await registration.update();
-    if (registration.waiting) {
+    await withTimeout(registration.update(), 4500, "update-timeout");
+
+    let waitingWorker = registration.waiting;
+    if (!waitingWorker && registration.installing) {
+      updateStatusText.textContent = "正在安装新版";
+      await waitForWorkerInstalled(registration.installing);
+      waitingWorker = registration.waiting || registration.installing;
+    }
+
+    if (waitingWorker) {
       updateStatusText.textContent = "已获取新版";
       if (window.confirm("已获取新版，是否立即刷新？")) {
-        registration.waiting.postMessage({ type: "SKIP_WAITING" });
-        window.location.reload();
+        await activateWaitingWorker(waitingWorker);
       }
       return;
     }
 
     updateStatusText.textContent = "已是最新";
-  } catch {
-    updateStatusText.textContent = "检查失败";
+  } catch (error) {
+    updateStatusText.textContent = error.message?.includes("timeout") ? "检查超时，请稍后重试" : "检查失败";
+  } finally {
+    updateAppButton.disabled = false;
   }
 }
 
@@ -2224,6 +2286,16 @@ showLogoToggle.addEventListener("change", () => {
 });
 buttonSizeSelect.addEventListener("change", () => {
   appSettings.buttonSize = buttonSizeSelect.value;
+  saveAppSettings();
+  render();
+});
+showFrequentToggle.addEventListener("change", () => {
+  appSettings.showFrequentGroup = showFrequentToggle.checked;
+  saveAppSettings();
+  render();
+});
+frequentLimitInput.addEventListener("change", () => {
+  appSettings.frequentLimit = Math.min(20, Math.max(3, Math.round(Number(frequentLimitInput.value) || 9)));
   saveAppSettings();
   render();
 });
