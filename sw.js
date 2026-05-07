@@ -1,10 +1,11 @@
-const CACHE_NAME = "jicheqi-v49";
+const CACHE_NAME = "jicheqi-v52";
 const APP_FILES = [
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
   "./regions.js",
+  "./us-regions.js",
   "./manifest.webmanifest",
   "./icons/car-icon-192.png",
   "./icons/car-icon-512.png",

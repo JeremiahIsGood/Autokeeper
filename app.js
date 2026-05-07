@@ -339,7 +339,7 @@ const US_STATE_NAME_MAP = {
 };
 
 const CHINA_REGION_TREE = window.REGION_TREE;
-const US_REGION_TREE = US_STATES.map((state) => ({
+const US_REGION_TREE = window.US_REGION_TREE || US_STATES.map((state) => ({
   province: state,
   cities: [{ city: state, districts: [state] }],
 }));
@@ -541,14 +541,14 @@ const COUNTRY_CONFIGS = {
     name: "美国",
     flag: "🇺🇸",
     allRegionLabel: "全国",
-    defaultRegion: "加利福尼亚州 加利福尼亚州 加利福尼亚州",
+    defaultRegion: "加利福尼亚州 加利福尼亚州 Los Angeles County",
     brandGroups: US_BRAND_GROUPS,
     regionTree: US_REGION_TREE,
   },
 };
 
 const STORAGE_KEY = "jicheqi.records.v1";
-const APP_VERSION = "1.2.8";
+const APP_VERSION = "1.3.2";
 const SETTINGS_KEY = `${STORAGE_KEY}.settings`;
 const RANGE_LABELS = {
   today: "本日",
@@ -712,7 +712,9 @@ function setCountryState(country) {
 }
 
 function getCountrySetting(key, country = currentCountry) {
-  return appSettings?.countries?.[country]?.[key] || getCountryConfig(country).defaultRegion;
+  const config = getCountryConfig(country);
+  const savedRegion = normalizeRegionName(appSettings?.countries?.[country]?.[key] || config.defaultRegion);
+  return regionExistsInTree(savedRegion, country) ? savedRegion : config.defaultRegion;
 }
 
 function setCountrySetting(key, value, country = currentCountry) {
@@ -730,6 +732,15 @@ function normalizeRegionName(regionName) {
       normalized = normalized.replaceAll(englishName, chineseName);
     });
   return normalized;
+}
+
+function regionExistsInTree(regionName, country = currentCountry) {
+  if (!regionName || isAllRegion(regionName)) return true;
+  const config = getCountryConfig(country);
+  const { province, city, district } = getRegionParts(regionName);
+  const provinceItem = config.regionTree.find((item) => item.province === province);
+  const cityItem = provinceItem?.cities.find((item) => item.city === city);
+  return Boolean(cityItem?.districts.includes(district));
 }
 
 function normalizeRecentRegionEntry(entry) {
@@ -828,7 +839,8 @@ function rememberLastRegion(regionName) {
 function getCountryRecentRegions(country = currentCountry) {
   const recent = appSettings?.countries?.[country]?.recentRegions;
   const normalized = Array.isArray(recent) ? recent.map(normalizeRecentRegionEntry).filter(Boolean) : [];
-  return normalized.length > 0 ? normalized.slice(0, 5) : [{ name: getCountryConfig(country).defaultRegion, usedAt: "" }];
+  const valid = normalized.filter((item) => regionExistsInTree(item.name, country));
+  return valid.length > 0 ? valid.slice(0, 5) : [{ name: getCountryConfig(country).defaultRegion, usedAt: "" }];
 }
 
 function loadRecords() {
@@ -973,7 +985,8 @@ function isAllRegion(regionName) {
 }
 
 function getRegionParts(regionName) {
-  const [province = "", city = "", district = ""] = regionName.split(" ");
+  const [province = "", city = "", ...districtParts] = regionName.split(" ");
+  const district = districtParts.join(" ");
   return { province, city, district };
 }
 
@@ -1424,8 +1437,18 @@ function updateCountryButtons() {
 }
 
 function updateRankButtons() {
+  if (currentCountry === "US" && rankRegionScope === "city") {
+    rankRegionScope = "province";
+  }
   rankPageButton.classList.toggle("is-active", !rankPage.hidden);
   document.querySelectorAll("[data-rank-scope]").forEach((button) => {
+    if (button.dataset.rankScope === "district") button.textContent = currentCountry === "US" ? "县" : "区县";
+    if (button.dataset.rankScope === "city") {
+      button.textContent = "城市";
+      button.hidden = currentCountry === "US";
+    }
+    if (button.dataset.rankScope === "province") button.textContent = currentCountry === "US" ? "州" : "省级";
+    if (button.dataset.rankScope === "all") button.textContent = getCountryConfig().allRegionLabel;
     button.classList.toggle("is-active", button.dataset.rankScope === rankRegionScope);
   });
   document.querySelectorAll("[data-rank-range]").forEach((button) => {
@@ -1745,6 +1768,7 @@ function openRegionDialog(mode = "record") {
   regionDialogMode = mode;
   regionDialog.hidden = false;
   regionSearchInput.value = "";
+  updateRegionDialogLabels();
   const baseRegion = mode === "rank" ? rankRegionBase : mode === "default" ? getCountrySetting("defaultRegion") : lastSpecificRegion;
   primeRegionDialog(baseRegion);
   renderRegionList();
@@ -1753,6 +1777,10 @@ function openRegionDialog(mode = "record") {
 
 function closeRegionDialog() {
   regionDialog.hidden = true;
+}
+
+function updateRegionDialogLabels() {
+  regionSearchInput.placeholder = currentCountry === "US" ? "搜索州、县" : "搜索城市、区县";
 }
 
 function shouldSkipCityStep(province) {
@@ -1835,7 +1863,7 @@ function renderRegionList() {
   regionBackButton.disabled = regionStep === "province";
 
   if (regionStep === "province") {
-    regionPathText.textContent = "请选择省级地区";
+    regionPathText.textContent = currentCountry === "US" ? "请选择州" : "请选择省级地区";
     activeRegionTree.forEach((province) => {
       const button = createRegionOption(province.province, false);
       button.addEventListener("click", () => chooseProvince(province));
