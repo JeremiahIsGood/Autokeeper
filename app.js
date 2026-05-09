@@ -565,7 +565,7 @@ const COUNTRY_CONFIGS = {
 };
 
 const STORAGE_KEY = "jicheqi.records.v1";
-const APP_VERSION = "1.3.6";
+const APP_VERSION = "1.3.7";
 const SETTINGS_KEY = `${STORAGE_KEY}.settings`;
 const BRAND_ALIASES = {
   枫叶: "曹操汽车",
@@ -1881,6 +1881,42 @@ function makeRegionName(province, city, district) {
   return `${province.province} ${city.city} ${district}`;
 }
 
+function makeRegionCityKey(provinceName, cityName) {
+  return `${provinceName} ${cityName}`;
+}
+
+function buildRegionCountIndex() {
+  const index = {
+    province: new Map(),
+    city: new Map(),
+    district: new Map(),
+  };
+
+  records.forEach((record) => {
+    if (record.country !== currentCountry || !record.region) return;
+    const { province, city } = getRegionParts(record.region);
+    if (!province || !city) return;
+
+    const cityKey = makeRegionCityKey(province, city);
+    index.province.set(province, (index.province.get(province) || 0) + 1);
+    index.city.set(cityKey, (index.city.get(cityKey) || 0) + 1);
+    index.district.set(record.region, (index.district.get(record.region) || 0) + 1);
+  });
+
+  return index;
+}
+
+function sortRegionItemsByCount(items, getCount) {
+  return items
+    .map((item, index) => ({ item, index, count: getCount(item) }))
+    .sort((a, b) => b.count - a.count || a.index - b.index)
+    .map(({ item }) => item);
+}
+
+function formatRegionCount(count) {
+  return count > 0 ? `${count} 条` : "无记录";
+}
+
 function findRegionLocation(regionName) {
   const parts = getRegionParts(regionName);
   const province = activeRegionTree.find((item) => item.province === parts.province);
@@ -1945,11 +1981,13 @@ function renderRegionList() {
   regionList.innerHTML = "";
   regionList.hidden = regionSearchInput.value.trim().length > 0;
   regionBackButton.disabled = regionStep === "province";
+  const countIndex = buildRegionCountIndex();
 
   if (regionStep === "province") {
     regionPathText.textContent = currentCountry === "US" ? "请选择州" : "请选择省级地区";
-    activeRegionTree.forEach((province) => {
-      const button = createRegionOption(province.province, false);
+    const provinces = sortRegionItemsByCount(activeRegionTree, (province) => countIndex.province.get(province.province) || 0);
+    provinces.forEach((province) => {
+      const button = createRegionOption(province.province, false, countIndex.province.get(province.province) || 0);
       button.addEventListener("click", () => chooseProvince(province));
       regionList.append(button);
     });
@@ -1958,8 +1996,9 @@ function renderRegionList() {
 
   if (regionStep === "city" && selectedProvince) {
     regionPathText.textContent = selectedProvince.province;
-    selectedProvince.cities.forEach((city) => {
-      const button = createRegionOption(city.city, false);
+    const cities = sortRegionItemsByCount(selectedProvince.cities, (city) => countIndex.city.get(makeRegionCityKey(selectedProvince.province, city.city)) || 0);
+    cities.forEach((city) => {
+      const button = createRegionOption(city.city, false, countIndex.city.get(makeRegionCityKey(selectedProvince.province, city.city)) || 0);
       button.addEventListener("click", () => chooseCity(city));
       regionList.append(button);
     });
@@ -1970,21 +2009,27 @@ function renderRegionList() {
     regionPathText.textContent = shouldSkipCityStep(selectedProvince)
       ? selectedProvince.province
       : `${selectedProvince.province} > ${selectedCity.city}`;
-    selectedCity.districts.forEach((district) => {
+    const districts = sortRegionItemsByCount(selectedCity.districts, (district) => {
+      return countIndex.district.get(makeRegionName(selectedProvince, selectedCity, district)) || 0;
+    });
+    districts.forEach((district) => {
       const regionName = makeRegionName(selectedProvince, selectedCity, district);
-      const button = createRegionOption(district, regionName === lastSpecificRegion);
+      const button = createRegionOption(district, regionName === lastSpecificRegion, countIndex.district.get(regionName) || 0);
       button.addEventListener("click", () => selectSpecificRegion(regionName));
       regionList.append(button);
     });
   }
 }
 
-function createRegionOption(label, isActive) {
+function createRegionOption(label, isActive, count = 0) {
   const button = document.createElement("button");
   button.className = "region-option";
   button.classList.toggle("is-active", isActive);
   button.type = "button";
-  button.textContent = label;
+  button.innerHTML = `
+    <span class="region-option-name">${label}</span>
+    <span class="region-option-count">${formatRegionCount(count)}</span>
+  `;
   return button;
 }
 
@@ -2003,9 +2048,13 @@ function renderRegionSearch() {
     return;
   }
 
-  const matches = REGION_OPTIONS.filter((region) => {
-    return region.name.includes(keyword) || region.shortName.includes(keyword) || region.district.includes(keyword);
-  }).slice(0, 60);
+  const countIndex = buildRegionCountIndex();
+  const matches = sortRegionItemsByCount(
+    REGION_OPTIONS.filter((region) => {
+      return region.name.includes(keyword) || region.shortName.includes(keyword) || region.district.includes(keyword);
+    }),
+    (region) => countIndex.district.get(region.name) || 0
+  ).slice(0, 60);
 
   if (matches.length === 0) {
     const empty = document.createElement("div");
@@ -2019,9 +2068,11 @@ function renderRegionSearch() {
     const button = document.createElement("button");
     button.className = "search-result";
     button.type = "button";
+    const count = countIndex.district.get(region.name) || 0;
     button.innerHTML = `
       <strong>${region.district}</strong>
       <span>${region.province} · ${region.city}</span>
+      <em>${formatRegionCount(count)}</em>
     `;
     button.addEventListener("click", () => selectSpecificRegion(region.name));
     regionSearchResults.append(button);
