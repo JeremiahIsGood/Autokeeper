@@ -29,7 +29,7 @@ const BRAND_GROUPS = [
       "吉利银河",
       "吉利几何",
       "东风风行",
-      "枫叶",
+      "曹操汽车",
       "乐道",
       "零跑",
       "欧拉",
@@ -55,11 +55,19 @@ const BRAND_GROUPS = [
       "东风奕派",
       "大通",
       "国金",
+      "iCar",
+      "东南",
+      "奇瑞风云",
+      "长安欧尚",
+    ]
+  },
+  {
+    "name": "中国小众品牌",
+    "brands": [
       "瑞麒",
       "东风",
       "东风风光",
       "睿蓝",
-      "iCar",
       "极越",
       "江淮",
       "萤火虫",
@@ -76,13 +84,11 @@ const BRAND_GROUPS = [
       "猛士",
       "君马",
       "力帆",
-      "东南",
       "东风纳米",
       "中华",
       "仰望",
       "全球鹰",
       "凌宝",
-      "奇瑞风云",
       "尚界",
       "思铭",
       "斯威",
@@ -90,11 +96,16 @@ const BRAND_GROUPS = [
       "理念",
       "蓝电",
       "观致",
-      "长安欧尚",
       "高合",
       "江铃",
       "宝沃",
-      "创维"
+      "创维",
+      "金杯",
+      "开瑞",
+      "212",
+      "凯翼",
+      "远航",
+      "雷丁"
     ]
   },
   {
@@ -452,7 +463,7 @@ const BRAND_LOGOS = {
   "极石": "logos/logo-084.png",
   "极越": "logos/logo-085.png",
   "林肯": "logos/logo-086.png",
-  "枫叶": "logos/logo-087.png",
+  "曹操汽车": "logos/logo-087.png",
   "标致": "logos/logo-088.png",
   "欧宝": "logos/logo-089.png",
   "欧拉": "logos/logo-090.png",
@@ -525,7 +536,13 @@ const BRAND_LOGOS = {
   "庞蒂亚克": "logos/logo-157.png",
   "瑞麒": "logos/logo-158.png",
   "创维": "logos/logo-159.png",
-  "大发": "logos/logo-160.png"
+  "大发": "logos/logo-160.png",
+  "金杯": "logos/logo-161.png",
+  "开瑞": "logos/logo-162.png",
+  "212": "logos/logo-163.png",
+  "凯翼": "logos/logo-164.png",
+  "远航": "logos/logo-165.png",
+  "雷丁": "logos/logo-166.png"
 };
 
 const COUNTRY_CONFIGS = {
@@ -548,8 +565,23 @@ const COUNTRY_CONFIGS = {
 };
 
 const STORAGE_KEY = "jicheqi.records.v1";
-const APP_VERSION = "1.3.2";
+const APP_VERSION = "1.3.6";
 const SETTINGS_KEY = `${STORAGE_KEY}.settings`;
+const BRAND_ALIASES = {
+  枫叶: "曹操汽车",
+};
+const BRAND_MERGE_RULES = [
+  {
+    setting: "mergeGeelyGalaxyGeometry",
+    primary: "吉利银河",
+    children: ["吉利几何"],
+  },
+  {
+    setting: "mergeMercedesMaybach",
+    primary: "奔驰",
+    children: ["迈巴赫"],
+  },
+];
 const RANGE_LABELS = {
   today: "本日",
   week: "近七天",
@@ -653,6 +685,8 @@ const showLogoToggle = document.querySelector("#showLogoToggle");
 const buttonSizeSelect = document.querySelector("#buttonSizeSelect");
 const showFrequentToggle = document.querySelector("#showFrequentToggle");
 const frequentLimitInput = document.querySelector("#frequentLimitInput");
+const mergeGeelyToggle = document.querySelector("#mergeGeelyToggle");
+const mergeMercedesToggle = document.querySelector("#mergeMercedesToggle");
 const resetBrandOrderButton = document.querySelector("#resetBrandOrderButton");
 const defaultRegionButton = document.querySelector("#defaultRegionButton");
 const defaultRegionText = document.querySelector("#defaultRegionText");
@@ -775,6 +809,8 @@ function loadAppSettings() {
     buttonSize: "large",
     showFrequentGroup: true,
     frequentLimit: 9,
+    mergeGeelyGalaxyGeometry: false,
+    mergeMercedesMaybach: false,
     guideSeen: false,
     undoTipSeen: false,
   };
@@ -864,8 +900,46 @@ function normalizeRecordRegion(record) {
   return {
     ...record,
     country: record.country && COUNTRY_CONFIGS[record.country] ? record.country : "CN",
+    brand: normalizeBrandName(record.brand),
     region: normalizeRegionName(oldRegionMap[record.region] || record.region),
   };
+}
+
+function normalizeBrandName(brand) {
+  const name = String(brand || "");
+  return BRAND_ALIASES[name] || name;
+}
+
+function isBrandMergeEnabled(rule) {
+  return Boolean(rule && appSettings?.[rule.setting]);
+}
+
+function getMergeRuleForChild(brand) {
+  return BRAND_MERGE_RULES.find((rule) => isBrandMergeEnabled(rule) && rule.children.includes(brand));
+}
+
+function getMergeRuleForPrimary(brand) {
+  return BRAND_MERGE_RULES.find((rule) => isBrandMergeEnabled(rule) && rule.primary === brand);
+}
+
+function getEffectiveBrand(brand) {
+  const normalized = normalizeBrandName(brand);
+  return getMergeRuleForChild(normalized)?.primary || normalized;
+}
+
+function getBrandsForDisplayCount(brand) {
+  const normalized = normalizeBrandName(brand);
+  const rule = getMergeRuleForPrimary(normalized);
+  return rule ? [rule.primary, ...rule.children] : [normalized];
+}
+
+function brandMatchesDisplayBrand(recordBrand, displayBrand) {
+  return getBrandsForDisplayCount(displayBrand).includes(normalizeBrandName(recordBrand));
+}
+
+function normalizeBrandOrderList(list) {
+  if (!Array.isArray(list)) return [];
+  return [...new Set(list.map(normalizeBrandName).filter(Boolean))];
 }
 
 function loadCollapsedGroups() {
@@ -880,7 +954,10 @@ function loadCollapsedGroups() {
 function loadBrandOrders() {
   try {
     const saved = localStorage.getItem(`${STORAGE_KEY}.brandOrders`);
-    return saved ? JSON.parse(saved) : {};
+    const parsed = saved ? JSON.parse(saved) : {};
+    return Object.fromEntries(
+      Object.entries(parsed).map(([groupName, order]) => [groupName, normalizeBrandOrderList(order)])
+    );
   } catch {
     return {};
   }
@@ -1015,7 +1092,7 @@ function countRecords({ brand, region = selectedRegion, range = "today" } = {}) 
   const previousRange = selectedRange;
   selectedRange = range;
   const count = records.filter((record) => {
-    const matchesBrand = brand ? record.brand === brand : true;
+    const matchesBrand = brand ? brandMatchesDisplayBrand(record.brand, brand) : true;
     const matchesRegion = isAllRegion(region) || record.region === region;
     return record.country === currentCountry && matchesBrand && matchesRegion && inSelectedRange(record);
   }).length;
@@ -1023,17 +1100,16 @@ function countRecords({ brand, region = selectedRegion, range = "today" } = {}) 
   return count;
 }
 
-function countRecentBrand(brand) {
-  const recentStart = startOfLastSevenDays();
+function countFrequentBrand(brand) {
   return records.filter((record) => {
-    return record.country === currentCountry && record.brand === brand && inSelectedRegion(record) && new Date(record.time) >= recentStart;
+    return record.country === currentCountry && getEffectiveBrand(record.brand) === brand && inSelectedRegion(record);
   }).length;
 }
 
 function getFrequentBrands() {
-  return BRANDS.map((brand) => ({
+  return [...new Set(BRANDS.map(getEffectiveBrand))].map((brand) => ({
     brand,
-    count: countRecentBrand(brand),
+    count: countFrequentBrand(brand),
   }))
     .filter((item) => item.count > 0)
     .sort((a, b) => b.count - a.count || BRANDS.indexOf(a.brand) - BRANDS.indexOf(b.brand))
@@ -1083,7 +1159,7 @@ function undoLastRecord() {
 function removeLatestBrandRecord(brand) {
   let index = -1;
   for (let i = records.length - 1; i >= 0; i -= 1) {
-    if (records[i].brand === brand && inSelectedRegion(records[i])) {
+    if (brandMatchesDisplayBrand(records[i].brand, brand) && inSelectedRegion(records[i])) {
       index = i;
       break;
     }
@@ -1103,12 +1179,14 @@ function removeLatestBrandRecord(brand) {
 }
 
 function buildRanking() {
-  const totals = new Map(BRANDS.map((brand) => [brand, 0]));
+  const rankingBrands = [...new Set(BRANDS.map(getEffectiveBrand))];
+  const totals = new Map(rankingBrands.map((brand) => [brand, 0]));
 
   records
     .filter((record) => isInRankRegion(record) && isInRange(record, rankRange, rankRange === "month" ? selectedRankMonth : selectedRankYear))
     .forEach((record) => {
-      totals.set(record.brand, (totals.get(record.brand) || 0) + 1);
+      const brand = getEffectiveBrand(record.brand);
+      totals.set(brand, (totals.get(brand) || 0) + 1);
     });
 
   return [...totals.entries()]
@@ -1130,11 +1208,15 @@ function createBrandButton(brand, groupName, canDrag) {
   button.dataset.group = groupName;
   button.dataset.canDrag = String(canDrag);
   const logo = appSettings.showLogos ? BRAND_LOGOS[brand] : "";
+  const mergeChildRule = getMergeRuleForChild(brand);
   button.classList.toggle("has-logo", Boolean(logo));
+  button.classList.toggle("is-merged-child", Boolean(mergeChildRule));
   button.innerHTML = `
+    ${mergeChildRule ? `<span class="merge-badge">并入</span>` : ""}
     ${logo ? `<span class="brand-logo-wrap"><img class="brand-logo" src="${logo}" alt="${brand}车标"></span>` : ""}
     <span class="brand-name">${brand}</span>
     <span class="brand-count">${countRecords({ brand, range: selectedRange })}</span>
+    ${mergeChildRule ? `<span class="brand-merge-note">计入${mergeChildRule.primary}</span>` : ""}
   `;
 
   button.addEventListener("pointerdown", (event) => {
@@ -1302,7 +1384,7 @@ function renderBrands() {
       createBrandGroup({
         name: "常用",
         brands: frequentBrands,
-        note: `近七天最多 ${getFrequentLimit()}`,
+        note: `全部时间最多 ${getFrequentLimit()}`,
         canDrag: false,
       })
     );
@@ -1571,6 +1653,8 @@ function renderSettings() {
   buttonSizeSelect.value = appSettings.buttonSize;
   showFrequentToggle.checked = appSettings.showFrequentGroup;
   frequentLimitInput.value = String(getFrequentLimit());
+  mergeGeelyToggle.checked = appSettings.mergeGeelyGalaxyGeometry;
+  mergeMercedesToggle.checked = appSettings.mergeMercedesMaybach;
 
   const countryRecords = records.filter((record) => record.country === currentCountry);
   const sortedRecords = [...countryRecords].sort((a, b) => new Date(a.time) - new Date(b.time));
@@ -2040,7 +2124,7 @@ function saveSortDialog() {
 
 function getBrandRecords(brand) {
   return records
-    .filter((record) => record.brand === brand && inSelectedRegion(record))
+    .filter((record) => brandMatchesDisplayBrand(record.brand, brand) && inSelectedRegion(record))
     .sort((a, b) => new Date(b.time) - new Date(a.time));
 }
 
@@ -2326,6 +2410,16 @@ showFrequentToggle.addEventListener("change", () => {
 });
 frequentLimitInput.addEventListener("change", () => {
   appSettings.frequentLimit = Math.min(20, Math.max(3, Math.round(Number(frequentLimitInput.value) || 9)));
+  saveAppSettings();
+  render();
+});
+mergeGeelyToggle.addEventListener("change", () => {
+  appSettings.mergeGeelyGalaxyGeometry = mergeGeelyToggle.checked;
+  saveAppSettings();
+  render();
+});
+mergeMercedesToggle.addEventListener("change", () => {
+  appSettings.mergeMercedesMaybach = mergeMercedesToggle.checked;
   saveAppSettings();
   render();
 });
