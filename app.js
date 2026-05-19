@@ -565,7 +565,7 @@ const COUNTRY_CONFIGS = {
 };
 
 const STORAGE_KEY = "jicheqi.records.v1";
-const APP_VERSION = "1.3.7";
+const APP_VERSION = "1.3.8";
 const SETTINGS_KEY = `${STORAGE_KEY}.settings`;
 const BRAND_ALIASES = {
   枫叶: "曹操汽车",
@@ -2225,10 +2225,10 @@ function renderRecordDialog() {
         minute: "2-digit",
       });
       item.innerHTML = `
-        <span>
+        <span class="record-main">
           <strong>${record.brand}</strong>
-          <em>${formatRegion(record.region)}</em>
         </span>
+        <em class="record-region">${formatRegion(record.region)}</em>
         <time>${time}</time>
         <button class="record-delete-button" type="button" aria-label="删除这条记录" title="删除">🗑</button>
       `;
