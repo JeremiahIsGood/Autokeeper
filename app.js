@@ -237,7 +237,7 @@ const US_BRAND_GROUPS = [
   },
   {
     name: "其他品牌",
-    brands: ["沃尔沃", "极星", "VinFast", "布加迪", "萨博"],
+    brands: ["沃尔沃", "极星", "VinFast", "布加迪", "萨博", "菲斯克"],
   },
 ];
 
@@ -542,7 +542,8 @@ const BRAND_LOGOS = {
   "212": "logos/logo-163.png",
   "凯翼": "logos/logo-164.png",
   "远航": "logos/logo-165.png",
-  "雷丁": "logos/logo-166.png"
+  "雷丁": "logos/logo-166.png",
+  "菲斯克": "logos/logo-167.png"
 };
 
 const COUNTRY_CONFIGS = {
