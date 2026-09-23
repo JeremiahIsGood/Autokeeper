@@ -1,6 +1,6 @@
 const BRAND_GROUPS = [
   {
-    "name": "中国",
+    "name": "中国品牌",
     "brands": [
       "比亚迪",
       "埃安",
@@ -109,7 +109,7 @@ const BRAND_GROUPS = [
     ]
   },
   {
-    "name": "日本",
+    "name": "日本品牌",
     "brands": [
       "丰田",
       "本田",
@@ -122,11 +122,12 @@ const BRAND_GROUPS = [
       "铃木",
       "英菲尼迪",
       "世极",
-      "大发"
+      "大发",
+      "赛扬"
     ]
   },
   {
-    "name": "美国",
+    "name": "美国品牌",
     "brands": [
       "特斯拉",
       "福特",
@@ -140,7 +141,7 @@ const BRAND_GROUPS = [
     ]
   },
   {
-    "name": "德国",
+    "name": "德国品牌",
     "brands": [
       "大众",
       "奔驰",
@@ -154,7 +155,7 @@ const BRAND_GROUPS = [
     ]
   },
   {
-    "name": "英国",
+    "name": "英国品牌",
     "brands": [
       "路虎",
       "捷豹",
@@ -169,7 +170,7 @@ const BRAND_GROUPS = [
     ]
   },
   {
-    "name": "韩国",
+    "name": "韩国品牌",
     "brands": [
       "现代",
       "起亚",
@@ -177,7 +178,7 @@ const BRAND_GROUPS = [
     ]
   },
   {
-    "name": "法国",
+    "name": "法国品牌",
     "brands": [
       "标致",
       "雪铁龙",
@@ -187,7 +188,7 @@ const BRAND_GROUPS = [
     ]
   },
   {
-    "name": "意大利",
+    "name": "意大利品牌",
     "brands": [
       "玛莎拉蒂",
       "菲亚特",
@@ -197,7 +198,7 @@ const BRAND_GROUPS = [
     ]
   },
   {
-    "name": "其他",
+    "name": "其他品牌",
     "brands": [
       "沃尔沃",
       "斯柯达",
@@ -213,11 +214,11 @@ const CHINA_BRAND_GROUPS = BRAND_GROUPS;
 const US_BRAND_GROUPS = [
   {
     name: "美国品牌",
-    brands: ["福特", "雪佛兰", "特斯拉", "别克", "凯迪拉克", "林肯", "吉普", "道奇", "克莱斯勒", "GMC", "公羊", "路西德", "里维安", "水星", "庞蒂亚克"],
+    brands: ["福特", "雪佛兰", "特斯拉", "别克", "凯迪拉克", "林肯", "吉普", "道奇", "克莱斯勒", "GMC", "公羊", "路西德", "里维安", "水星", "庞蒂亚克", "土星", "普利茅斯", "奥兹莫比尔", "Waymo"],
   },
   {
     name: "日本品牌",
-    brands: ["丰田", "本田", "日产", "斯巴鲁", "雷克萨斯", "马自达", "三菱", "讴歌", "英菲尼迪", "铃木"],
+    brands: ["丰田", "本田", "日产", "斯巴鲁", "雷克萨斯", "马自达", "三菱", "讴歌", "英菲尼迪", "铃木", "赛扬"],
   },
   {
     name: "韩国品牌",
@@ -543,7 +544,12 @@ const BRAND_LOGOS = {
   "凯翼": "logos/logo-164.png",
   "远航": "logos/logo-165.png",
   "雷丁": "logos/logo-166.png",
-  "菲斯克": "logos/logo-167.png"
+  "菲斯克": "logos/logo-167.png",
+  "土星": "logos/logo-168.png",
+  "普利茅斯": "logos/logo-169.png",
+  "赛扬": "logos/logo-170.png",
+  "奥兹莫比尔": "logos/logo-171.png",
+  "Waymo": "logos/logo-172.png"
 };
 
 const COUNTRY_CONFIGS = {
